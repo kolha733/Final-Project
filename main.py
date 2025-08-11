@@ -90,7 +90,9 @@ class Main(tk.Frame):
     #Удаление информации о пользователе
     def delete_record(self):
         for select_item in self.tree.selection():
-            self.db.cur.execute('''DELETE FROM db WHERE id=?''', self.tree.set(select_item, '#1'))
+            # sqlite3.execute expects a sequence of parameters; pass a one-item tuple
+            record_id = self.tree.set(select_item, '#1')
+            self.db.cur.execute('''DELETE FROM db WHERE id=?''', (record_id,))
 
         self.db.conn.commit()
         self.view_records()
