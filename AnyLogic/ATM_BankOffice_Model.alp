@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*************************************************
+             AnyLogic Project File
+             ATM / Bank Office simple model
+*************************************************
+-->
+<AnyLogicWorkspace WorkspaceVersion="1.9" AnyLogicVersion="8.9.8.202602271015" AlpVersion="8.9.7">
+<Model>
+  <Id>1700000000000</Id>
+  <Name><![CDATA[ATM Bank Office Model]]></Name>
+  <Description><![CDATA[Учебная 2D-модель AnyLogic по мотивам ATM Model / Bank Office.
+
+Логика модели:
+1. Клиенты приходят в банк.
+2. Если банкомат свободен, клиент идет к банкомату.
+3. Если банкомат занят, клиент идет в очередь к операторам.
+4. Операторы представлены блоком service с емкостью 4, то есть одновременно могут обслуживаться 4 клиента.
+5. После обслуживания клиент покидает систему.
+
+Показатели для защиты: длина очереди queue.size(), занятость ATM.size(), количество обслуженных sink.count().]]></Description>
+  <EngineVersion>6</EngineVersion>
+  <JavaPackageName><![CDATA[atm_bank_office_model]]></JavaPackageName>
+  <ModelTimeUnit><![CDATA[Minute]]></ModelTimeUnit>
+  <ActiveObjectClasses>
+    <!-- ========= Active Object Class: Main ======== -->
+    <ActiveObjectClass>
+      <Id>1700000000001</Id>
+      <Name><![CDATA[Main]]></Name>
+      <ClientAreaTopLeft><X>0</X><Y>0</Y></ClientAreaTopLeft>
+      <Generic>false</Generic>
+      <GenericParameter>
+        <Id>1700000000002</Id>
+        <Name><![CDATA[1700000000002]]></Name>
+        <GenericParameterValue Class="CodeValue">
+          <Code><![CDATA[T extends Agent]]></Code>
+        </GenericParameterValue>
+        <GenericParameterLabel><![CDATA[Generic parameter:]]></GenericParameterLabel>
+      </GenericParameter>
+      <FlowChartsUsage>ENTITY</FlowChartsUsage>
+      <SamplesToKeep>100</SamplesToKeep>
+      <LimitNumberOfArrayElements>false</LimitNumberOfArrayElements>
+      <ElementsLimitValue>100</ElementsLimitValue>
+      <MakeDefaultViewArea>true</MakeDefaultViewArea>
+      <SceneGridColor/>
+      <SceneBackgroundColor>-1</SceneBackgroundColor>
+      <SceneSkybox>null</SceneSkybox>
+      <AgentProperties>
+        <SpaceType>CONTINUOUS</SpaceType>
+        <EnvironmentDefinesInitialLocation>true</EnvironmentDefinesInitialLocation>
+        <RotateAnimationTowardsMovement>true</RotateAnimationTowardsMovement>
+        <RotateAnimationVertically>false</RotateAnimationVertically>
+        <VelocityCode Class="CodeUnitValue"><Code><![CDATA[10]]></Code><Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit></VelocityCode>
+        <PhysicalLength Class="CodeUnitValue"><Code><![CDATA[1]]></Code><Unit Class="LengthUnits"><![CDATA[METER]]></Unit></PhysicalLength>
+        <PhysicalWidth Class="CodeUnitValue"><Code><![CDATA[1]]></Code><Unit Class="LengthUnits"><![CDATA[METER]]></Unit></PhysicalWidth>
+        <PhysicalHeight Class="CodeUnitValue"><Code><![CDATA[1]]></Code><Unit Class="LengthUnits"><![CDATA[METER]]></Unit></PhysicalHeight>
+      </AgentProperties>
+      <EnvironmentProperties>
+        <EnableSteps>false</EnableSteps>
+        <StepDurationCode Class="CodeUnitValue"><Code><![CDATA[1.0]]></Code><Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit></StepDurationCode>
+        <SpaceType>CONTINUOUS</SpaceType>
+        <WidthCode><![CDATA[500]]></WidthCode>
+        <HeightCode><![CDATA[500]]></HeightCode>
+        <ZHeightCode><![CDATA[0]]></ZHeightCode>
+        <ColumnsCountCode><![CDATA[100]]></ColumnsCountCode>
+        <RowsCountCode><![CDATA[100]]></RowsCountCode>
+        <NeigborhoodType>MOORE</NeigborhoodType>
+        <LayoutType>USER_DEF</LayoutType>
+        <LayoutTypeApplyOnStartup>true</LayoutTypeApplyOnStartup>
+        <NetworkType>USER_DEF</NetworkType>
+        <NetworkTypeApplyOnStartup>true</NetworkTypeApplyOnStartup>
+        <ConnectionsPerAgentCode><![CDATA[2]]></ConnectionsPerAgentCode>
+        <ConnectionsRangeCode><![CDATA[50]]></ConnectionsRangeCode>
+        <NeighborLinkFractionCode><![CDATA[0.95]]></NeighborLinkFractionCode>
+        <MCode><![CDATA[10]]></MCode>
+      </EnvironmentProperties>
+      <DatasetsCreationProperties>
+        <AutoCreate>true</AutoCreate>
+        <OccurrenceAtTime>true</OccurrenceAtTime>
+        <OccurrenceDate>1717200000000</OccurrenceDate>
+        <OccurrenceTime Class="CodeUnitValue"><Code><![CDATA[0]]></Code><Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit></OccurrenceTime>
+        <RecurrenceCode Class="CodeUnitValue"><Code><![CDATA[1]]></Code><Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit></RecurrenceCode>
+      </DatasetsCreationProperties>
+      <ScaleRuler>
+        <Id>1700000000003</Id>
+        <Name><![CDATA[scale]]></Name>
+        <X>0</X><Y>-150</Y>
+        <PublicFlag>false</PublicFlag><PresentationFlag>false</PresentationFlag><ShowLabel>false</ShowLabel>
+        <DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+        <Length>100</Length><Rotation>0</Rotation><ScaleType>BASED_ON_LENGTH</ScaleType>
+        <ModelLength>10</ModelLength><LengthUnits>METER</LengthUnits><Scale>10</Scale>
+        <InheritedFromParentAgentType>true</InheritedFromParentAgentType>
+      </ScaleRuler>
+      <CurrentLevel>1700000000004</CurrentLevel>
+      <ConnectionsId>1700000000005</ConnectionsId>
+      <Connectors>
+        <Connector>
+          <Id>1700000000101</Id><Name><![CDATA[connector_source_select]]></Name><X>120</X><Y>120</Y>
+          <Label><X>10</X><Y>0</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel>
+          <SourceEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[source]]></ItemName></SourceEmbeddedObjectReference>
+          <SourceConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Source]]></ClassName><ItemName><![CDATA[out]]></ItemName></SourceConnectableItemReference>
+          <TargetEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[selectOutput]]></ItemName></TargetEmbeddedObjectReference>
+          <TargetConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[SelectOutput]]></ClassName><ItemName><![CDATA[in]]></ItemName></TargetConnectableItemReference>
+          <Points><Point><X>0</X><Y>0</Y></Point><Point><X>60</X><Y>0</Y></Point></Points>
+        </Connector>
+        <Connector>
+          <Id>1700000000102</Id><Name><![CDATA[connector_select_atm]]></Name><X>240</X><Y>110</Y>
+          <Label><X>10</X><Y>0</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel>
+          <SourceEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[selectOutput]]></ItemName></SourceEmbeddedObjectReference>
+          <SourceConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[SelectOutput]]></ClassName><ItemName><![CDATA[outT]]></ItemName></SourceConnectableItemReference>
+          <TargetEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[ATM]]></ItemName></TargetEmbeddedObjectReference>
+          <TargetConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Delay]]></ClassName><ItemName><![CDATA[in]]></ItemName></TargetConnectableItemReference>
+          <Points><Point><X>0</X><Y>0</Y></Point><Point><X>70</X><Y>-60</Y></Point></Points>
+        </Connector>
+        <Connector>
+          <Id>1700000000103</Id><Name><![CDATA[connector_atm_sink]]></Name><X>390</X><Y>60</Y>
+          <Label><X>10</X><Y>0</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel>
+          <SourceEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[ATM]]></ItemName></SourceEmbeddedObjectReference>
+          <SourceConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Delay]]></ClassName><ItemName><![CDATA[out]]></ItemName></SourceConnectableItemReference>
+          <TargetEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[sink]]></ItemName></TargetEmbeddedObjectReference>
+          <TargetConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Sink]]></ClassName><ItemName><![CDATA[in]]></ItemName></TargetConnectableItemReference>
+          <Points><Point><X>0</X><Y>0</Y></Point><Point><X>120</X><Y>60</Y></Point></Points>
+        </Connector>
+        <Connector>
+          <Id>1700000000104</Id><Name><![CDATA[connector_select_queue]]></Name><X>240</X><Y>130</Y>
+          <Label><X>10</X><Y>0</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel>
+          <SourceEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[selectOutput]]></ItemName></SourceEmbeddedObjectReference>
+          <SourceConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[SelectOutput]]></ClassName><ItemName><![CDATA[outF]]></ItemName></SourceConnectableItemReference>
+          <TargetEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[queue]]></ItemName></TargetEmbeddedObjectReference>
+          <TargetConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Queue]]></ClassName><ItemName><![CDATA[in]]></ItemName></TargetConnectableItemReference>
+          <Points><Point><X>0</X><Y>0</Y></Point><Point><X>70</X><Y>70</Y></Point></Points>
+        </Connector>
+        <Connector>
+          <Id>1700000000105</Id><Name><![CDATA[connector_queue_service]]></Name><X>390</X><Y>200</Y>
+          <Label><X>10</X><Y>0</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel>
+          <SourceEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[queue]]></ItemName></SourceEmbeddedObjectReference>
+          <SourceConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Queue]]></ClassName><ItemName><![CDATA[out]]></ItemName></SourceConnectableItemReference>
+          <TargetEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[service]]></ItemName></TargetEmbeddedObjectReference>
+          <TargetConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Delay]]></ClassName><ItemName><![CDATA[in]]></ItemName></TargetConnectableItemReference>
+          <Points><Point><X>0</X><Y>0</Y></Point><Point><X>80</X><Y>0</Y></Point></Points>
+        </Connector>
+        <Connector>
+          <Id>1700000000106</Id><Name><![CDATA[connector_service_sink]]></Name><X>520</X><Y>200</Y>
+          <Label><X>10</X><Y>0</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel>
+          <SourceEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[service]]></ItemName></SourceEmbeddedObjectReference>
+          <SourceConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Delay]]></ClassName><ItemName><![CDATA[out]]></ItemName></SourceConnectableItemReference>
+          <TargetEmbeddedObjectReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Main]]></ClassName><ItemName><![CDATA[sink]]></ItemName></TargetEmbeddedObjectReference>
+          <TargetConnectableItemReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Sink]]></ClassName><ItemName><![CDATA[in]]></ItemName></TargetConnectableItemReference>
+          <Points><Point><X>0</X><Y>0</Y></Point><Point><X>30</X><Y>-80</Y></Point></Points>
+        </Connector>
+      </Connectors>
+      <AgentLinks>
+        <AgentLink>
+          <Id>1700000000005</Id><Name><![CDATA[connections]]></Name><X>50</X><Y>-50</Y>
+          <Label><X>15</X><Y>0</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>true</ShowLabel>
+          <HandleReceiveInConnections>false</HandleReceiveInConnections><AgentLinkType>COLLECTION_OF_LINKS</AgentLinkType><AgentLinkBidirectional>true</AgentLinkBidirectional>
+          <MessageType><![CDATA[Object]]></MessageType><LineStyle>SOLID</LineStyle><LineWidth>1</LineWidth><LineColor>-16777216</LineColor><LineZOrder>UNDER_AGENTS</LineZOrder><LineArrow>NONE</LineArrow><LineArrowPosition>END</LineArrowPosition>
+        </AgentLink>
+      </AgentLinks>
+      <EmbeddedObjects>
+        <EmbeddedObject>
+          <Id>1700000000201</Id><Name><![CDATA[source]]></Name><X>80</X><Y>120</Y>
+          <Label><X>-15</X><Y>-20</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>true</ShowLabel>
+          <ActiveObjectClass><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Source]]></ClassName></ActiveObjectClass>
+          <GenericParameterSubstitute><GenericParameterSubstituteReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Source]]></ClassName><ItemName><![CDATA[1412336242928]]></ItemName></GenericParameterSubstituteReference></GenericParameterSubstitute>
+          <Parameters>
+            <Parameter><Name><![CDATA[rate]]></Name><Value Class="CodeUnitValue"><Code><![CDATA[0.3]]></Code><Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit></Value></Parameter>
+            <Parameter><Name><![CDATA[newEntity]]></Name><Value Class="EntityCodeValue"><EntityEmbeddedObject><ActiveObjectClass><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Customer]]></ClassName></ActiveObjectClass><GenericParameterSubstitute><GenericParameterSubstituteReference><PackageName><![CDATA[atm_bank_office_model]]></PackageName><ClassName><![CDATA[Customer]]></ClassName><ItemName><![CDATA[1700000001002]]></ItemName></GenericParameterSubstituteReference></GenericParameterSubstitute><Parameters></Parameters><ReplicationFlag>true</ReplicationFlag><Replication Class="CodeValue"><Code><![CDATA[100]]></Code></Replication><CollectionType>ARRAY_LIST_BASED</CollectionType><InitialLocationType>AT_ANIMATION_POSITION</InitialLocationType><XCode Class="CodeValue"><Code><![CDATA[0]]></Code></XCode><YCode Class="CodeValue"><Code><![CDATA[0]]></Code></YCode><ZCode Class="CodeValue"><Code><![CDATA[0]]></Code></ZCode><ColumnCode Class="CodeValue"><Code><![CDATA[0]]></Code></ColumnCode><RowCode Class="CodeValue"><Code><![CDATA[0]]></Code></RowCode><LatitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LatitudeCode><LongitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LongitudeCode><LocationNameCode Class="CodeValue"><Code><![CDATA[""]]></Code></LocationNameCode><InitializationType>LOAD_FROM_DATABASE</InitializationType><InitializationDatabaseTableQuery><TableReference></TableReference></InitializationDatabaseTableQuery><InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType><QuantityColumn></QuantityColumn></EntityEmbeddedObject></Value></Parameter>
+          </Parameters>
+          <ReplicationFlag>false</ReplicationFlag><Replication Class="CodeValue"><Code><![CDATA[100]]></Code></Replication><CollectionType>ARRAY_LIST_BASED</CollectionType><InitialLocationType>AT_ANIMATION_POSITION</InitialLocationType><XCode Class="CodeValue"><Code><![CDATA[0]]></Code></XCode><YCode Class="CodeValue"><Code><![CDATA[0]]></Code></YCode><ZCode Class="CodeValue"><Code><![CDATA[0]]></Code></ZCode><ColumnCode Class="CodeValue"><Code><![CDATA[0]]></Code></ColumnCode><RowCode Class="CodeValue"><Code><![CDATA[0]]></Code></RowCode><LatitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LatitudeCode><LongitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LongitudeCode><LocationNameCode Class="CodeValue"><Code><![CDATA[""]]></Code></LocationNameCode><InitializationType>SPECIFIED_NUMBER</InitializationType><InitializationDatabaseTableQuery><TableReference></TableReference></InitializationDatabaseTableQuery><InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType><QuantityColumn></QuantityColumn>
+        </EmbeddedObject>
+        <EmbeddedObject>
+          <Id>1700000000202</Id><Name><![CDATA[selectOutput]]></Name><X>200</X><Y>120</Y><Label><X>-25</X><Y>-20</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>true</ShowLabel>
+          <ActiveObjectClass><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[SelectOutput]]></ClassName></ActiveObjectClass>
+          <GenericParameterSubstitute><GenericParameterSubstituteReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[SelectOutput]]></ClassName><ItemName><![CDATA[1412336242931]]></ItemName></GenericParameterSubstituteReference></GenericParameterSubstitute>
+          <Parameters><Parameter><Name><![CDATA[conditionIsProbabilistic]]></Name><Value Class="CodeValue"><Code><![CDATA[false]]></Code></Value></Parameter><Parameter><Name><![CDATA[condition]]></Name><Value Class="CodeValue"><Code><![CDATA[ATM.size() == 0]]></Code></Value></Parameter></Parameters>
+          <ReplicationFlag>false</ReplicationFlag><Replication Class="CodeValue"><Code><![CDATA[100]]></Code></Replication><CollectionType>ARRAY_LIST_BASED</CollectionType><InitialLocationType>AT_ANIMATION_POSITION</InitialLocationType><XCode Class="CodeValue"><Code><![CDATA[0]]></Code></XCode><YCode Class="CodeValue"><Code><![CDATA[0]]></Code></YCode><ZCode Class="CodeValue"><Code><![CDATA[0]]></Code></ZCode><ColumnCode Class="CodeValue"><Code><![CDATA[0]]></Code></ColumnCode><RowCode Class="CodeValue"><Code><![CDATA[0]]></Code></RowCode><LatitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LatitudeCode><LongitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LongitudeCode><LocationNameCode Class="CodeValue"><Code><![CDATA[""]]></Code></LocationNameCode><InitializationType>SPECIFIED_NUMBER</InitializationType><InitializationDatabaseTableQuery><TableReference></TableReference></InitializationDatabaseTableQuery><InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType><QuantityColumn></QuantityColumn>
+        </EmbeddedObject>
+        <EmbeddedObject>
+          <Id>1700000000203</Id><Name><![CDATA[ATM]]></Name><X>340</X><Y>60</Y><Label><X>-10</X><Y>-20</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>true</ShowLabel>
+          <ActiveObjectClass><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Delay]]></ClassName></ActiveObjectClass><GenericParameterSubstitute><GenericParameterSubstituteReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Delay]]></ClassName><ItemName><![CDATA[1412336242930]]></ItemName></GenericParameterSubstituteReference></GenericParameterSubstitute>
+          <Parameters><Parameter><Name><![CDATA[delayTime]]></Name><Value Class="CodeUnitValue"><Code><![CDATA[triangular(0.8, 1.5, 3.5)]]></Code><Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit></Value></Parameter><Parameter><Name><![CDATA[capacity]]></Name><Value Class="CodeValue"><Code><![CDATA[1]]></Code></Value></Parameter><Parameter><Name><![CDATA[forceStatisticsCollection]]></Name><Value Class="CodeValue"><Code><![CDATA[true]]></Code></Value></Parameter></Parameters>
+          <ReplicationFlag>false</ReplicationFlag><Replication Class="CodeValue"><Code><![CDATA[100]]></Code></Replication><CollectionType>ARRAY_LIST_BASED</CollectionType><InitialLocationType>AT_ANIMATION_POSITION</InitialLocationType><XCode Class="CodeValue"><Code><![CDATA[0]]></Code></XCode><YCode Class="CodeValue"><Code><![CDATA[0]]></Code></YCode><ZCode Class="CodeValue"><Code><![CDATA[0]]></Code></ZCode><ColumnCode Class="CodeValue"><Code><![CDATA[0]]></Code></ColumnCode><RowCode Class="CodeValue"><Code><![CDATA[0]]></Code></RowCode><LatitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LatitudeCode><LongitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LongitudeCode><LocationNameCode Class="CodeValue"><Code><![CDATA[""]]></Code></LocationNameCode><InitializationType>SPECIFIED_NUMBER</InitializationType><InitializationDatabaseTableQuery><TableReference></TableReference></InitializationDatabaseTableQuery><InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType><QuantityColumn></QuantityColumn>
+        </EmbeddedObject>
+        <EmbeddedObject>
+          <Id>1700000000204</Id><Name><![CDATA[queue]]></Name><X>340</X><Y>200</Y><Label><X>-10</X><Y>-20</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>true</ShowLabel>
+          <ActiveObjectClass><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Queue]]></ClassName></ActiveObjectClass><GenericParameterSubstitute><GenericParameterSubstituteReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Queue]]></ClassName><ItemName><![CDATA[1412336242932]]></ItemName></GenericParameterSubstituteReference></GenericParameterSubstitute>
+          <Parameters><Parameter><Name><![CDATA[capacity]]></Name><Value Class="CodeValue"><Code><![CDATA[15]]></Code></Value></Parameter><Parameter><Name><![CDATA[forceStatisticsCollection]]></Name><Value Class="CodeValue"><Code><![CDATA[true]]></Code></Value></Parameter></Parameters>
+          <ReplicationFlag>false</ReplicationFlag><Replication Class="CodeValue"><Code><![CDATA[100]]></Code></Replication><CollectionType>ARRAY_LIST_BASED</CollectionType><InitialLocationType>AT_ANIMATION_POSITION</InitialLocationType><XCode Class="CodeValue"><Code><![CDATA[0]]></Code></XCode><YCode Class="CodeValue"><Code><![CDATA[0]]></Code></YCode><ZCode Class="CodeValue"><Code><![CDATA[0]]></Code></ZCode><ColumnCode Class="CodeValue"><Code><![CDATA[0]]></Code></ColumnCode><RowCode Class="CodeValue"><Code><![CDATA[0]]></Code></RowCode><LatitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LatitudeCode><LongitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LongitudeCode><LocationNameCode Class="CodeValue"><Code><![CDATA[""]]></Code></LocationNameCode><InitializationType>SPECIFIED_NUMBER</InitializationType><InitializationDatabaseTableQuery><TableReference></TableReference></InitializationDatabaseTableQuery><InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType><QuantityColumn></QuantityColumn>
+        </EmbeddedObject>
+        <EmbeddedObject>
+          <Id>1700000000205</Id><Name><![CDATA[service]]></Name><X>470</X><Y>200</Y><Label><X>-10</X><Y>-20</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>true</ShowLabel>
+          <ActiveObjectClass><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Delay]]></ClassName></ActiveObjectClass><GenericParameterSubstitute><GenericParameterSubstituteReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Delay]]></ClassName><ItemName><![CDATA[1412336242930]]></ItemName></GenericParameterSubstituteReference></GenericParameterSubstitute>
+          <Parameters><Parameter><Name><![CDATA[delayTime]]></Name><Value Class="CodeUnitValue"><Code><![CDATA[triangular(2, 5, 10)]]></Code><Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit></Value></Parameter><Parameter><Name><![CDATA[capacity]]></Name><Value Class="CodeValue"><Code><![CDATA[4]]></Code></Value></Parameter><Parameter><Name><![CDATA[forceStatisticsCollection]]></Name><Value Class="CodeValue"><Code><![CDATA[true]]></Code></Value></Parameter></Parameters>
+          <ReplicationFlag>false</ReplicationFlag><Replication Class="CodeValue"><Code><![CDATA[100]]></Code></Replication><CollectionType>ARRAY_LIST_BASED</CollectionType><InitialLocationType>AT_ANIMATION_POSITION</InitialLocationType><XCode Class="CodeValue"><Code><![CDATA[0]]></Code></XCode><YCode Class="CodeValue"><Code><![CDATA[0]]></Code></YCode><ZCode Class="CodeValue"><Code><![CDATA[0]]></Code></ZCode><ColumnCode Class="CodeValue"><Code><![CDATA[0]]></Code></ColumnCode><RowCode Class="CodeValue"><Code><![CDATA[0]]></Code></RowCode><LatitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LatitudeCode><LongitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LongitudeCode><LocationNameCode Class="CodeValue"><Code><![CDATA[""]]></Code></LocationNameCode><InitializationType>SPECIFIED_NUMBER</InitializationType><InitializationDatabaseTableQuery><TableReference></TableReference></InitializationDatabaseTableQuery><InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType><QuantityColumn></QuantityColumn>
+        </EmbeddedObject>
+        <EmbeddedObject>
+          <Id>1700000000206</Id><Name><![CDATA[sink]]></Name><X>590</X><Y>120</Y><Label><X>-5</X><Y>-20</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>true</ShowLabel>
+          <ActiveObjectClass><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Sink]]></ClassName></ActiveObjectClass><GenericParameterSubstitute><GenericParameterSubstituteReference><PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName><ClassName><![CDATA[Sink]]></ClassName><ItemName><![CDATA[1412336242929]]></ItemName></GenericParameterSubstituteReference></GenericParameterSubstitute>
+          <Parameters><Parameter><Name><![CDATA[onEnter]]></Name></Parameter><Parameter><Name><![CDATA[destroyEntity]]></Name></Parameter></Parameters>
+          <ReplicationFlag>false</ReplicationFlag><Replication Class="CodeValue"><Code><![CDATA[100]]></Code></Replication><CollectionType>ARRAY_LIST_BASED</CollectionType><InitialLocationType>AT_ANIMATION_POSITION</InitialLocationType><XCode Class="CodeValue"><Code><![CDATA[0]]></Code></XCode><YCode Class="CodeValue"><Code><![CDATA[0]]></Code></YCode><ZCode Class="CodeValue"><Code><![CDATA[0]]></Code></ZCode><ColumnCode Class="CodeValue"><Code><![CDATA[0]]></Code></ColumnCode><RowCode Class="CodeValue"><Code><![CDATA[0]]></Code></RowCode><LatitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LatitudeCode><LongitudeCode Class="CodeValue"><Code><![CDATA[0]]></Code></LongitudeCode><LocationNameCode Class="CodeValue"><Code><![CDATA[""]]></Code></LocationNameCode><InitializationType>SPECIFIED_NUMBER</InitializationType><InitializationDatabaseTableQuery><TableReference></TableReference></InitializationDatabaseTableQuery><InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType><QuantityColumn></QuantityColumn>
+        </EmbeddedObject>
+      </EmbeddedObjects>
+      <Presentation>
+        <Level>
+          <Id>1700000000004</Id><Name><![CDATA[level]]></Name><X>0</X><Y>0</Y><Label><X>10</X><Y>0</Y></Label><PublicFlag>true</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel><DrawMode>SHAPE_DRAW_2D3D</DrawMode><Z>0</Z><LevelVisibility>DIM_NON_CURRENT</LevelVisibility>
+          <Presentation>
+            <Text><Id>1700000000301</Id><Name><![CDATA[title]]></Name><X>50</X><Y>30</Y><Label><X>10</X><Y>0</Y></Label><PublicFlag>true</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel><DrawMode>SHAPE_DRAW_2D</DrawMode><EmbeddedIcon>false</EmbeddedIcon><Z>0</Z><Rotation>0.0</Rotation><Color>-16777216</Color><Text><![CDATA[ATM Bank Office Model]]></Text><Font><Name><![CDATA[SansSerif]]></Name><Size>24</Size><Style>1</Style></Font><Alignment>LEFT</Alignment></Text>
+            <Text><Id>1700000000302</Id><Name><![CDATA[kpiText]]></Name><X>50</X><Y>330</Y><Label><X>10</X><Y>0</Y></Label><PublicFlag>true</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel><DrawMode>SHAPE_DRAW_2D</DrawMode><EmbeddedIcon>false</EmbeddedIcon><Z>0</Z><Rotation>0.0</Rotation><Color>-16777216</Color><Text><![CDATA[Queue: " + queue.size() + " | ATM busy: " + ATM.size() + " | Served: " + sink.count()]]></Text><Font><Name><![CDATA[SansSerif]]></Name><Size>14</Size><Style>0</Style></Font><Alignment>LEFT</Alignment></Text>
+          </Presentation>
+        </Level>
+      </Presentation>
+    </ActiveObjectClass>
+    <!-- ========= Active Object Class: Customer ======== -->
+    <ActiveObjectClass>
+      <Id>1700000001001</Id><Name><![CDATA[Customer]]></Name><ClientAreaTopLeft><X>0</X><Y>0</Y></ClientAreaTopLeft><Generic>false</Generic>
+      <GenericParameter><Id>1700000001002</Id><Name><![CDATA[1700000001002]]></Name><GenericParameterValue Class="CodeValue"><Code><![CDATA[T extends Agent]]></Code></GenericParameterValue><GenericParameterLabel><![CDATA[Generic parameter:]]></GenericParameterLabel></GenericParameter>
+      <FlowChartsUsage>ENTITY</FlowChartsUsage><SamplesToKeep>100</SamplesToKeep><LimitNumberOfArrayElements>false</LimitNumberOfArrayElements><ElementsLimitValue>100</ElementsLimitValue><MakeDefaultViewArea>true</MakeDefaultViewArea><SceneGridColor/><SceneBackgroundColor/><SceneSkybox>null</SceneSkybox>
+      <AgentProperties><SpaceType>CONTINUOUS</SpaceType><EnvironmentDefinesInitialLocation>true</EnvironmentDefinesInitialLocation><RotateAnimationTowardsMovement>true</RotateAnimationTowardsMovement><RotateAnimationVertically>false</RotateAnimationVertically><VelocityCode Class="CodeUnitValue"><Code><![CDATA[10]]></Code><Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit></VelocityCode><PhysicalLength Class="CodeUnitValue"><Code><![CDATA[1]]></Code><Unit Class="LengthUnits"><![CDATA[METER]]></Unit></PhysicalLength><PhysicalWidth Class="CodeUnitValue"><Code><![CDATA[1]]></Code><Unit Class="LengthUnits"><![CDATA[METER]]></Unit></PhysicalWidth><PhysicalHeight Class="CodeUnitValue"><Code><![CDATA[1]]></Code><Unit Class="LengthUnits"><![CDATA[METER]]></Unit></PhysicalHeight></AgentProperties>
+      <EnvironmentProperties><EnableSteps>false</EnableSteps><StepDurationCode Class="CodeUnitValue"><Code><![CDATA[1.0]]></Code><Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit></StepDurationCode><SpaceType>CONTINUOUS</SpaceType><WidthCode><![CDATA[500]]></WidthCode><HeightCode><![CDATA[500]]></HeightCode><ZHeightCode><![CDATA[0]]></ZHeightCode><ColumnsCountCode><![CDATA[100]]></ColumnsCountCode><RowsCountCode><![CDATA[100]]></RowsCountCode><NeigborhoodType>MOORE</NeigborhoodType><LayoutType>USER_DEF</LayoutType><LayoutTypeApplyOnStartup>true</LayoutTypeApplyOnStartup><NetworkType>USER_DEF</NetworkType><NetworkTypeApplyOnStartup>true</NetworkTypeApplyOnStartup><ConnectionsPerAgentCode><![CDATA[2]]></ConnectionsPerAgentCode><ConnectionsRangeCode><![CDATA[50]]></ConnectionsRangeCode><NeighborLinkFractionCode><![CDATA[0.95]]></NeighborLinkFractionCode><MCode><![CDATA[10]]></MCode></EnvironmentProperties>
+      <DatasetsCreationProperties><AutoCreate>true</AutoCreate><OccurrenceAtTime>true</OccurrenceAtTime><OccurrenceDate>1717200000000</OccurrenceDate><OccurrenceTime Class="CodeUnitValue"><Code><![CDATA[0]]></Code><Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit></OccurrenceTime><RecurrenceCode Class="CodeUnitValue"><Code><![CDATA[1]]></Code><Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit></RecurrenceCode></DatasetsCreationProperties>
+      <ScaleRuler><Id>1700000001003</Id><Name><![CDATA[scale]]></Name><X>0</X><Y>-150</Y><PublicFlag>false</PublicFlag><PresentationFlag>false</PresentationFlag><ShowLabel>false</ShowLabel><DrawMode>SHAPE_DRAW_2D3D</DrawMode><Length>100</Length><Rotation>0</Rotation><ScaleType>BASED_ON_LENGTH</ScaleType><ModelLength>10</ModelLength><LengthUnits>METER</LengthUnits><Scale>10</Scale><InheritedFromParentAgentType>true</InheritedFromParentAgentType></ScaleRuler>
+      <CurrentLevel>1700000001004</CurrentLevel><ConnectionsId>1700000001005</ConnectionsId>
+      <AgentLinks><AgentLink><Id>1700000001005</Id><Name><![CDATA[connections]]></Name><X>50</X><Y>-50</Y><Label><X>15</X><Y>0</Y></Label><PublicFlag>false</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>true</ShowLabel><HandleReceiveInConnections>false</HandleReceiveInConnections><AgentLinkType>COLLECTION_OF_LINKS</AgentLinkType><AgentLinkBidirectional>true</AgentLinkBidirectional><MessageType><![CDATA[Object]]></MessageType><LineStyle>SOLID</LineStyle><LineWidth>1</LineWidth><LineColor>-16777216</LineColor><LineZOrder>UNDER_AGENTS</LineZOrder><LineArrow>NONE</LineArrow><LineArrowPosition>END</LineArrowPosition></AgentLink></AgentLinks>
+      <Presentation><Level><Id>1700000001004</Id><Name><![CDATA[level]]></Name><X>0</X><Y>0</Y><Label><X>10</X><Y>0</Y></Label><PublicFlag>true</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel><DrawMode>SHAPE_DRAW_2D3D</DrawMode><Z>0</Z><LevelVisibility>DIM_NON_CURRENT</LevelVisibility></Level></Presentation>
+    </ActiveObjectClass>
+  </ActiveObjectClasses>
+  <DifferentialEquationsMethod>EULER</DifferentialEquationsMethod>
+  <MixedEquationsMethod>RK45_NEWTON</MixedEquationsMethod>
+  <AlgebraicEquationsMethod>MODIFIED_NEWTON</AlgebraicEquationsMethod>
+  <AbsoluteAccuracy>1.0E-5</AbsoluteAccuracy>
+  <FixedTimeStep>0.001</FixedTimeStep>
+  <RelativeAccuracy>1.0E-5</RelativeAccuracy>
+  <TimeAccuracy>1.0E-5</TimeAccuracy>
+  <Frame><Width>940</Width><Height>860</Height></Frame>
+  <Database><Logging>false</Logging><AutoExport>false</AutoExport><ShutdownCompact>false</ShutdownCompact><ImportSettings></ImportSettings><ExportSettings></ExportSettings></Database>
+  <RunConfiguration ActiveObjectClassId="1700000000001"><Id>1700000000901</Id><Name><![CDATA[RunConfiguration]]></Name><MaximumMemory>512</MaximumMemory><ModelTimeProperties><StopOption><![CDATA[Stop at specified time]]></StopOption><InitialDate><![CDATA[1717200000000]]></InitialDate><InitialTime><![CDATA[0.0]]></InitialTime><FinalDate><![CDATA[1717286400000]]></FinalDate><FinalTime><![CDATA[480.0]]></FinalTime></ModelTimeProperties><AnimationProperties><StopNever>true</StopNever><ExecutionMode>realTimeScaled</ExecutionMode><RealTimeScale>1.0</RealTimeScale><EnableZoomAndPanning>true</EnableZoomAndPanning><EnableDeveloperPanel>false</EnableDeveloperPanel><ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart></AnimationProperties><Inputs></Inputs><Outputs></Outputs></RunConfiguration>
+  <Experiments>
+    <SimulationExperiment ActiveObjectClassId="1700000000001"><Id>1700000000902</Id><Name><![CDATA[Simulation]]></Name><ClientAreaTopLeft><X>0</X><Y>0</Y></ClientAreaTopLeft><CommandLineArguments><![CDATA[]]></CommandLineArguments><MaximumMemory>512</MaximumMemory><RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType><CustomGeneratorCode>new Random()</CustomGeneratorCode><SeedValue>50</SeedValue><SelectionModeForSimultaneousEvents>LIFO</SelectionModeForSimultaneousEvents><VmArgs><![CDATA[]]></VmArgs><LoadRootFromSnapshot>false</LoadRootFromSnapshot><Presentation><Text><Id>1700000000910</Id><Name><![CDATA[text]]></Name><X>50</X><Y>30</Y><Label><X>10</X><Y>0</Y></Label><PublicFlag>true</PublicFlag><PresentationFlag>true</PresentationFlag><ShowLabel>false</ShowLabel><DrawMode>SHAPE_DRAW_2D</DrawMode><EmbeddedIcon>false</EmbeddedIcon><Z>0</Z><Rotation>0.0</Rotation><Color>-16777216</Color><Text><![CDATA[ATM Bank Office Model]]></Text><Font><Name><![CDATA[SansSerif]]></Name><Size>22</Size><Style>1</Style></Font><Alignment>LEFT</Alignment></Text></Presentation></SimulationExperiment>
+  </Experiments>
+</Model>
+</AnyLogicWorkspace>
