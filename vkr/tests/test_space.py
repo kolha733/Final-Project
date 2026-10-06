@@ -8,6 +8,7 @@ import pytest
 from scendrift.scenario import io
 from scendrift.scenario.space import (
     DEFAULT_SPACE,
+    AtLeast,
     Categorical,
     FloatDomain,
     IntDomain,
@@ -80,5 +81,23 @@ def test_taxonomy(demo_spec) -> None:
     assert c.kinds == ("real", "virtual") and c.forms == ("gradual",)
     assert c.severity == "high" and c.speed == "slow"
     assert c.scope == "partial" and c.balance == "imbalanced" and c.noise == "noisy"
+    prior_only = io.from_dict(
+        {"events": [{"position": 9_000, "kind": "prior", "magnitude": 0.2, "affected_share": 0.3}]}
+    )
+    assert classify(prior_only).scope == "n/a"
     sig = signature(io.from_dict({"events": [{"position": 9_000, "magnitude": 0.05}]}))
     assert sig == "real/sudden/K=1/low/abrupt/global/balanced/clean"
+
+
+def test_at_least_condition_follows_domain() -> None:
+    space = DEFAULT_SPACE.with_domain("n_drifts", IntDomain(1, 10))
+    hi = space.from_unit([0.9] * len(space.free_names()))
+    assert hi["n_drifts"] == 10 and hi["recurring"] is True
+    assert 2 in AtLeast(2) and 1 not in AtLeast(2) and None not in AtLeast(2)
+    assert "n_drifts ≥ 2" in [r["активен, если"] for r in space.table()]
+
+
+def test_domains_accept_numpy_and_reject_bool() -> None:
+    assert IntDomain(1, 5).contains(np.int64(3))
+    assert not FloatDomain(0.2, 1.0).contains(True)
+    assert FloatDomain(0.2, 1.0).contains(np.float32(0.5))

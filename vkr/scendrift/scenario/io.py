@@ -5,9 +5,12 @@
 Идентификатор сценария вычисляется по содержимому. Берётся SHA-256 от
 канонического JSON (ключи отсортированы, без пробелов) по смысловым полям
 ⟨B, E, Ω, s⟩ и версии схемы. Описательные поля (``name``, ``description``,
-``tags``, ``meta``) в хэш не входят. Значит, два сценария с одинаковым
-смыслом получают один идентификатор, а по идентификатору можно
-кэшировать и связывать результаты.
+``tags``, ``meta``) в хэш не входят. Поля, которые для события не имеют
+смысла (доля признаков α у prior-события и у возврата, профиль перехода у
+внезапного события), перед хэшированием приводятся к значениям по
+умолчанию. Поэтому любое смысловое изменение меняет идентификатор,
+сценарии с одинаковой цепочкой концептов получают один идентификатор, а
+по идентификатору можно кэшировать и связывать результаты.
 
 Наследование шаблонов (``extends``) и манифесты наборов сценариев
 реализуются на этапе 3 в модуле :mod:`scendrift.formation`.
@@ -50,12 +53,24 @@ _DESCRIPTIVE = {"name", "description", "tags", "meta"}
 _ID_LENGTH = 12
 
 
+def _normalize_event(event: dict[str, Any]) -> dict[str, Any]:
+    """Приводит не влияющие на данные поля события к значениям по умолчанию."""
+    event = dict(event)
+    if event.get("kind") in (None, "prior"):
+        event["affected_share"] = 1.0
+    if event.get("form") == "sudden":
+        event["shape"] = "linear"
+    return event
+
+
 def semantic_dict(spec: ScenarioSpec, *, include_evaluation: bool = True) -> dict[str, Any]:
-    """Смысловые поля сценария в JSON-совместимом виде."""
+    """Смысловые поля сценария в JSON-совместимом виде (с нормализацией событий)."""
     exclude = set(_DESCRIPTIVE)
     if not include_evaluation:
         exclude.add("evaluation")
-    return spec.model_dump(mode="json", exclude=exclude)
+    data = spec.model_dump(mode="json", exclude=exclude)
+    data["events"] = [_normalize_event(e) for e in data["events"]]
+    return data
 
 
 def canonical_json(spec: ScenarioSpec, *, include_evaluation: bool = True) -> str:

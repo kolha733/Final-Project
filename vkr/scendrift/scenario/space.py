@@ -9,14 +9,16 @@
 это общая основа для перебора по сетке, случайной выборки,
 латинского гиперкуба (LHS) и последовательностей Соболя.
 
-Некоторые параметры условные. Например, ширина перехода w имеет смысл
+Некоторые параметры условные. Например, ширина перехода ℓ имеет смысл
 только при φ ∈ {gradual, incremental}. Неактивный параметр получает
-значение по умолчанию и в план эксперимента не входит.
+значение по умолчанию, но его координата в плане сохраняется
+(см. :meth:`ParameterSpace.from_unit`).
 """
 
 from __future__ import annotations
 
 import math
+import numbers
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, replace
 from typing import Any
@@ -28,6 +30,7 @@ __all__ = [
     "Domain",
     "ParameterDef",
     "ParameterSpace",
+    "AtLeast",
     "DEFAULT_SPACE",
 ]
 
@@ -35,6 +38,27 @@ __all__ = [
 def _fmt(x: float) -> str:
     """Число в русской записи (десятичная запятая)."""
     return f"{x:g}".replace(".", ",")
+
+
+def _is_real(value: Any) -> bool:
+    return isinstance(value, numbers.Real) and not isinstance(value, bool)
+
+
+def _is_int(value: Any) -> bool:
+    return isinstance(value, numbers.Integral) and not isinstance(value, bool)
+
+
+@dataclass(frozen=True)
+class AtLeast:
+    """Условие активности «значение не меньше bound» (например, K ≥ 2)."""
+
+    bound: float
+
+    def __contains__(self, value: object) -> bool:
+        return _is_real(value) and value >= self.bound  # type: ignore[operator]
+
+    def __str__(self) -> str:
+        return f"≥ {_fmt(self.bound)}"
 
 
 @dataclass(frozen=True)
@@ -59,7 +83,7 @@ class FloatDomain:
         return self.low + u * (self.high - self.low)
 
     def contains(self, value: Any) -> bool:
-        return isinstance(value, int | float) and self.low <= float(value) <= self.high
+        return _is_real(value) and self.low <= float(value) <= self.high
 
     def levels(self, n: int) -> list[float]:
         """N равноотстоящих (на выбранной шкале) уровней, включая концы."""
@@ -96,11 +120,7 @@ class IntDomain:
         return int(min(self.high, max(self.low, value)))
 
     def contains(self, value: Any) -> bool:
-        return (
-            isinstance(value, int)
-            and not isinstance(value, bool)
-            and self.low <= value <= self.high
-        )
+        return _is_int(value) and self.low <= int(value) <= self.high
 
     def levels(self, n: int) -> list[int]:
         """N уровней, включая концы (дубликаты при округлении удаляются)."""
@@ -158,7 +178,8 @@ class ParameterDef:
         default: значение по умолчанию (используется и для неактивного параметра).
         unit: единицы измерения.
         description: смысл параметра.
-        active_if: условия активности: пары (имя другого параметра, допустимые значения).
+        active_if: условия активности: пары (имя другого параметра, допустимые
+            значения). Допустимые значения — кортеж или :class:`AtLeast`.
     """
 
     name: str
@@ -168,7 +189,7 @@ class ParameterDef:
     default: Any
     unit: str
     description: str
-    active_if: tuple[tuple[str, tuple[Any, ...]], ...] = ()
+    active_if: tuple[tuple[str, tuple[Any, ...] | AtLeast], ...] = ()
 
     def is_active(self, values: Mapping[str, Any]) -> bool:
         """Активен ли параметр при заданных значениях остальных параметров."""
@@ -277,7 +298,10 @@ class ParameterSpace:
         rows = []
         for p in self:
             cond = "; ".join(
-                f"{dep} ∈ {{{', '.join(map(str, allowed))}}}" for dep, allowed in p.active_if
+                f"{dep} {allowed}"
+                if isinstance(allowed, AtLeast)
+                else f"{dep} ∈ {{{', '.join(map(str, allowed))}}}"
+                for dep, allowed in p.active_if
             )
             rows.append(
                 {
@@ -338,13 +362,13 @@ DEFAULT_SPACE = ParameterSpace(
         ),
         ParameterDef(
             "recurring",
-            "r",
+            "alt",
             "schedule",
             Categorical((False, True)),
             False,
             "флаг",
             "чередование концептов A → B → A → …",
-            active_if=(("n_drifts", (2, 3, 4, 5)),),
+            active_if=(("n_drifts", AtLeast(2)),),
         ),
         ParameterDef(
             "form",
@@ -357,7 +381,7 @@ DEFAULT_SPACE = ParameterSpace(
         ),
         ParameterDef(
             "width",
-            "w",
+            "ℓ",
             "event",
             IntDomain(100, 4_000, log=True),
             1_000,

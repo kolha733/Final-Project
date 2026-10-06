@@ -9,7 +9,7 @@
   (:class:`StreamSpec`): семейство генератора, длина, размерность, доля
   положительного (миноритарного) класса, шум меток, структурный seed c;
 * E = (e₁, …, e_K) — упорядоченные события дрейфа (:class:`DriftEvent`),
-  e_k = (τ_k, w_k, φ_k, κ_k, m_k, α_k, ρ_k);
+  e_k = (τ_k, ℓ_k, φ_k, κ_k, m_k, α_k, ρ_k);
 * Ω — протокол оценки (:class:`~scendrift.evaluation.protocol.EvaluationSpec`);
 * s — seed реализации.
 
@@ -28,10 +28,11 @@
 from __future__ import annotations
 
 import math
+from collections.abc import Mapping
 from typing import Any, Literal
 
 import numpy as np
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from scendrift.evaluation.protocol import EvaluationSpec
 from scendrift.scenario.enums import DriftForm, DriftKind, TransitionShape
@@ -66,6 +67,36 @@ class _Frozen(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
 
+def _plain(value: Any, path: str = "") -> Any:
+    """Приводит произвольные параметры к JSON-совместимым значениям Python.
+
+    numpy-скаляры и массивы превращаются в числа и списки, кортежи — в
+    списки, −0,0 — в 0,0. Нечисловые (NaN, ±inf) значения и нестроковые ключи
+    отклоняются: иначе разные сценарии получили бы одинаковый идентификатор.
+    """
+    where = path or "параметрах"
+    if isinstance(value, np.generic):
+        value = value.item()
+    if isinstance(value, np.ndarray):
+        value = value.tolist()
+    if isinstance(value, bool) or value is None or isinstance(value, str | int):
+        return value
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError(f"недопустимое нечисловое значение {value!r} в {where}")
+        return value + 0.0
+    if isinstance(value, Mapping):
+        out = {}
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise ValueError(f"ключ {key!r} в {where} должен быть строкой")
+            out[key] = _plain(item, f"{path}.{key}" if path else key)
+        return out
+    if isinstance(value, list | tuple):
+        return [_plain(item, f"{path}[{i}]") for i, item in enumerate(value)]
+    raise ValueError(f"неподдерживаемый тип {type(value).__name__} в {where}")
+
+
 class StreamSpec(_Frozen):
     """Базовая конфигурация потока B = (f, n, d, π, η, c)."""
 
@@ -93,15 +124,27 @@ class StreamSpec(_Frozen):
         ),
     )
     family_params: dict[str, Any] = Field(
-        default_factory=dict, description="Параметры, специфичные для семейства."
+        default_factory=dict,
+        description="Параметры, специфичные для семейства (допустимые ключи задаёт семейство).",
     )
+
+    @field_validator("minority_share", "label_noise")
+    @classmethod
+    def _floats(cls, value: float) -> float:
+        """Заменяет −0,0 на 0,0, чтобы равные значения давали равный хэш."""
+        return value + 0.0
+
+    @field_validator("family_params", mode="before")
+    @classmethod
+    def _params(cls, value: Any) -> Any:
+        return _plain(value, "family_params") if isinstance(value, Mapping) else value
 
 
 class DriftEvent(_Frozen):
-    """Событие дрейфа e = (τ, w, φ, κ, m, α, ρ).
+    """Событие дрейфа e = (τ, ℓ, φ, κ, m, α, ρ).
 
     Интервал перехода — полуинтервал [onset, end), где
-    onset = τ − ⌊w/2⌋ и end = onset + w. При внезапном дрейфе onset = end = τ,
+    onset = τ − ⌊ℓ/2⌋ и end = onset + ℓ. При внезапном дрейфе onset = end = τ,
     и объект с индексом τ — первый объект нового концепта.
 
     Если задано ``returns_to`` (ρ), событие считается *повторяющимся*: поток
@@ -111,7 +154,7 @@ class DriftEvent(_Frozen):
     """
 
     position: int = Field(ge=0, description="τ — центр интервала перехода (индекс объекта).")
-    width: int = Field(0, ge=0, description="w — ширина перехода (в объектах).")
+    width: int = Field(0, ge=0, description="ℓ — ширина перехода (в объектах).")
     form: DriftForm = Field(DriftForm.SUDDEN, description="φ — форма перехода.")
     kind: DriftKind | None = Field(None, description="κ — вид дрейфа (None для повторяющегося).")
     magnitude: float | None = Field(
@@ -131,9 +174,19 @@ class DriftEvent(_Frozen):
     @classmethod
     def _default_kind(cls, data: Any) -> Any:
         """Подставляет вид ``real`` для обычного (неповторяющегося) события."""
-        if isinstance(data, dict) and data.get("returns_to") is None and data.get("kind") is None:
-            data = {**data, "kind": DriftKind.REAL}
+        if (
+            isinstance(data, Mapping)
+            and data.get("returns_to") is None
+            and data.get("kind") is None
+        ):
+            data = {**dict(data), "kind": DriftKind.REAL}
         return data
+
+    @field_validator("magnitude", "affected_share")
+    @classmethod
+    def _floats(cls, value: float | None) -> float | None:
+        """Заменяет −0,0 на 0,0, чтобы равные значения давали равный хэш."""
+        return None if value is None else value + 0.0
 
     @model_validator(mode="after")
     def _check_local(self) -> DriftEvent:
@@ -147,6 +200,8 @@ class DriftEvent(_Frozen):
         if self.returns_to is None:
             if self.magnitude is None:
                 raise ValueError("C2: для обычного события обязательна величина magnitude")
+            if self.kind is None:
+                raise ValueError("C2: для обычного события обязателен вид kind")
         else:
             if self.kind is not None or self.magnitude is not None:
                 raise ValueError(
@@ -197,8 +252,13 @@ class ScenarioSpec(_Frozen):
         return len(self.events)
 
     def with_seed(self, seed: int) -> ScenarioSpec:
-        """Копия сценария с другим seed реализации (для повторов)."""
-        return self.model_copy(update={"seed": int(seed)})
+        """Копия сценария с другим seed реализации (для повторов), с проверкой."""
+        return ScenarioSpec.model_validate({**self.model_dump(), "seed": int(seed)})
+
+    @field_validator("meta", mode="before")
+    @classmethod
+    def _meta(cls, value: Any) -> Any:
+        return _plain(value, "meta") if isinstance(value, Mapping) else value
 
 
 # ---------------------------------------------------------------------------
@@ -267,13 +327,17 @@ def _event_params(plan: DriftPlan, index: int) -> dict[str, Any]:
     params: dict[str, Any] = {k: v for k, v in plan.defaults.model_dump().items() if v is not None}
     for ov in plan.overrides:
         if ov.index == index:
+            if ov.returns_to is not None:
+                if ov.kind is not None or ov.magnitude is not None:
+                    raise ValueError(
+                        f"C3: событие {index} с returns_to не может задавать kind или magnitude"
+                    )
+                # Повторяющееся событие: вид и величина вычисляются, а не наследуются.
+                params.pop("kind", None)
+                params.pop("magnitude", None)
             params.update(
                 {k: v for k, v in ov.model_dump(exclude={"index"}).items() if v is not None}
             )
-            if ov.returns_to is not None:
-                # Повторяющееся событие: вид и величина вычисляются, а не задаются.
-                params.pop("kind", None)
-                params.pop("magnitude", None)
     params.setdefault("form", DriftForm.SUDDEN)
     if params["form"] == DriftForm.SUDDEN:
         params["width"] = 0
@@ -284,12 +348,14 @@ def _event_params(plan: DriftPlan, index: int) -> dict[str, Any]:
 def layout_uniform(widths: list[int], start: int, stop: int, delta: int) -> list[int]:
     """Центры событий при равномерном расписании.
 
-    Отрезок [start, stop) делится на K равных блоков, и след события
-    [onset, end + Δ) ставится в центр своего блока. Если блок длиннее следа,
-    все ограничения C4–C6 выполняются.
+    След события — полуинтервал [onset, end + Δ) длины ℓ_k + Δ. Свободное
+    место F = (stop − start) − Σ(ℓ_k + Δ) делится поровну между K событиями,
+    и каждый след ставится в центр своего блока длины (ℓ_k + Δ) + F/K. Если
+    следы помещаются в поток (F ≥ 0), ограничения C4–C6 выполняются при
+    любых ширинах переходов.
 
     Args:
-        widths: ширины переходов w_k.
+        widths: ширины переходов ℓ_k.
         start: начало допустимой области (обычно W).
         stop: конец потока n.
         delta: окно допуска Δ.
@@ -300,11 +366,13 @@ def layout_uniform(widths: list[int], start: int, stop: int, delta: int) -> list
     k_events = len(widths)
     if k_events == 0:
         return []
-    block = (stop - start) / k_events
-    centers = []
-    for i, w in enumerate(widths):
-        onset = start + i * block + max(0.0, (block - (w + delta)) / 2.0)
-        centers.append(int(math.floor(onset)) + w // 2)
+    footprints = [w + delta for w in widths]
+    share = max(0.0, (stop - start) - sum(footprints)) / k_events
+    centers, cursor = [], float(start)
+    for w, fp in zip(widths, footprints, strict=True):
+        onset = int(math.floor(cursor + share / 2.0))
+        centers.append(onset + w // 2)
+        cursor += fp + share
     return centers
 
 
@@ -313,7 +381,7 @@ def expand_plan(
     stream: StreamSpec,
     evaluation: EvaluationSpec,
 ) -> tuple[DriftEvent, ...]:
-    """Разворачивает компактный план в явный упорядоченный список событий.
+    """Разворачивает компактный план в явный список событий.
 
     Позиции рассчитываются так, чтобы при достаточной длине потока
     выполнялись ограничения C4–C6 (разогрев, хвост Δ после последнего
@@ -327,7 +395,13 @@ def expand_plan(
         evaluation: протокол оценки (нужны W и Δ).
 
     Returns:
-        Кортеж событий, упорядоченный по позиции.
+        Кортеж событий в порядке индексов. При расписаниях ``uniform`` и
+        ``random`` он упорядочен по позиции; явные позиции не сортируются
+        (на них ссылаются индексы ``returns_to``), а порядок проверяет C6.
+
+    Raises:
+        ValueError: при ссылке на несуществующее событие или противоречивом
+            переопределении (returns_to вместе с kind или magnitude).
     """
     k_events = plan.schedule.count
     if k_events == 0:

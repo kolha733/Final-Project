@@ -17,7 +17,7 @@
 | `configs/examples/` | примеры сценариев (YAML) |
 | `configs/schema/scenario.schema.json` | JSON Schema сценария (генерируется из pydantic) |
 | `tests/` | тесты pytest |
-| `tools/` | сборка ноутбука, схемы архитектуры |
+| `tools/` | сборка ноутбука, схемы архитектуры, оформление литературы по ГОСТ |
 | `docs/figures/` | рисунки для ноутбука, записки и презентации |
 | `PLAN.md`, `CONTRIBUTORS.md` | план работ и распределение вклада |
 

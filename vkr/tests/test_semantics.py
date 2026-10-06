@@ -80,8 +80,18 @@ def test_angle_for_infeasible_severity_raises() -> None:
 
 
 @pytest.mark.parametrize("m", [0.01, 0.2, 0.5, 0.9, 0.99])
-def test_hellinger_inverse(m: float) -> None:
-    assert S.hellinger_gauss(S.hellinger_shift(m)) == pytest.approx(m, abs=1e-12)
+def test_tv_inverse(m: float) -> None:
+    assert S.tv_gauss(S.tv_shift(m)) == pytest.approx(m, abs=1e-12)
+
+
+def test_tv_shift_known_value() -> None:
+    # TV(N(0,1), N(δ,1)) = 2Φ(δ/2) − 1; при m = 0,5 сдвиг δ = 2Φ⁻¹(0,75) ≈ 1,34898
+    assert S.tv_shift(0.5) == pytest.approx(1.3489795, abs=1e-6)
+
+
+def test_bvn_cdf_tiny_same_sign_arguments() -> None:
+    ref = 0.25 + math.asin(0.3) / (2 * math.pi)
+    assert S.bvn_cdf(1e-200, 1e-200, 0.3) == pytest.approx(ref, abs=1e-12)
 
 
 def test_prior_target_rule() -> None:
@@ -172,3 +182,73 @@ def test_monte_carlo_virtual_and_prior_preserve_labels() -> None:
     assert np.array_equal(c0.label(x), c1.label(x))
     assert np.array_equal(c1.label(x), c2.label(x))
     assert c2.prior == pytest.approx(0.55)
+
+
+def _sample_full(state: S.ConceptState, n: int, rng: np.random.Generator) -> np.ndarray:
+    """Выборка X по схеме label shift с текущей долей класса state.prior."""
+    return _sample(state, n, rng)
+
+
+def test_real_after_prior_equals_joint_tv_and_warns() -> None:
+    """После prior-дрейфа величина реального дрейфа остаётся TV совместных распределений.
+
+    Для выборки из P_a отношение плотностей p_b(x, y)/p_a(x, y) = 1[g_b(x) = y],
+    поэтому TV = P_a(g_a ≠ g_b), что и считает build_chain. P(X) при этом
+    меняется (W3), что проверяется по среднему проекции на w_a.
+    """
+    spec = io.from_dict(
+        {
+            "stream": {"n_samples": 20_000, "n_features": 6, "minority_share": 0.5},
+            "events": [
+                {"position": 5_000, "kind": "prior", "magnitude": 0.3},
+                {"position": 12_000, "kind": "real", "magnitude": 0.25},
+            ],
+        }
+    )
+    chain = S.build_chain(spec)
+    assert [v.code for v in chain.violations] == ["W3"]
+    a, b = chain.states[1], chain.states[2]
+    rng = np.random.default_rng(11)
+    xa = _sample_full(a, 300_000, rng)
+    assert np.mean(a.label(xa) != b.label(xa)) == pytest.approx(0.25, abs=0.004)
+    xb = _sample_full(b, 300_000, rng)
+    shift = np.mean((xa - a.mu) @ a.w) - np.mean((xb - b.mu) @ a.w)
+    assert abs(shift) > 0.05  # P(X) действительно изменилось
+
+
+def test_virtual_tv_exact_under_reweighting() -> None:
+    spec = io.from_dict(
+        {
+            "stream": {"n_samples": 20_000, "n_features": 6, "minority_share": 0.3},
+            "events": [
+                {"position": 5_000, "kind": "prior", "magnitude": 0.4},
+                {"position": 12_000, "kind": "virtual", "magnitude": 0.35, "affected_share": 0.5},
+            ],
+        }
+    )
+    chain = S.build_chain(spec)
+    a, b = chain.states[1], chain.states[2]
+    rng = np.random.default_rng(12)
+    x = _sample_full(a, 400_000, rng)
+    delta_mu = b.mu - a.mu
+    # классовые множители сокращаются (сдвиг ⊥ w), остаётся отношение гауссиан
+    log_ratio = (x - a.mu) @ delta_mu - 0.5 * float(delta_mu @ delta_mu)
+    tv = np.mean(np.clip(1.0 - np.exp(log_ratio), 0.0, None))
+    assert tv == pytest.approx(0.35, abs=0.004)
+    assert chain.geometry[1].realized["virtual"] == pytest.approx(0.35, abs=1e-12)
+
+
+def test_return_without_change_is_rejected() -> None:
+    spec = io.from_dict(
+        {
+            "stream": {"n_samples": 20_000, "minority_share": 0.5},
+            "events": [
+                {"position": 4_000, "kind": "prior", "magnitude": 0.3},
+                {"position": 8_000, "kind": "prior", "magnitude": 0.3},
+                {"position": 13_000, "returns_to": 0},
+            ],
+        }
+    )
+    chain = S.build_chain(spec)
+    assert [st.prior for st in chain.states] == pytest.approx([0.5, 0.8, 0.5, 0.5])
+    assert any(v.code == "C7" for v in chain.violations)

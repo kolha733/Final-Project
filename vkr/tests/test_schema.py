@@ -157,3 +157,49 @@ def test_schedule_plan_validation() -> None:
         DriftPlan.model_validate({"schedule": {"mode": "explicit", "count": 2, "positions": [1]}})
     with pytest.raises(pydantic.ValidationError):
         DriftPlan.model_validate({"schedule": {"mode": "uniform", "positions": [1]}})
+
+
+def test_with_seed_validates() -> None:
+    with pytest.raises(pydantic.ValidationError):
+        ScenarioSpec().with_seed(-5)
+
+
+def test_kind_default_for_any_mapping() -> None:
+    from types import MappingProxyType
+
+    e = DriftEvent.model_validate(MappingProxyType({"position": 100, "magnitude": 0.2}))
+    assert e.kind is DriftKind.REAL
+
+
+def test_family_params_are_normalized_and_finite() -> None:
+    import numpy as np
+
+    s = StreamSpec(family_params={"a": np.int64(3), "b": (1.0, np.float32(0.5)), "c": -0.0})
+    assert s.family_params == {"a": 3, "b": [1.0, 0.5], "c": 0.0}
+    assert type(s.family_params["a"]) is int
+    for bad in (float("nan"), float("inf")):
+        with pytest.raises(pydantic.ValidationError):
+            StreamSpec(family_params={"x": bad})
+
+
+def test_negative_zero_is_normalized() -> None:
+    assert str(StreamSpec(label_noise=-0.0).label_noise) == "0.0"
+
+
+def test_contradictory_recurring_override_rejected() -> None:
+    with pytest.raises(ValueError, match="C3"):
+        _expand(
+            {
+                "schedule": {"count": 2},
+                "defaults": {"magnitude": 0.2},
+                "overrides": [{"index": 1, "returns_to": 0, "kind": "virtual"}],
+            }
+        )
+
+
+def test_layout_valid_for_unequal_widths() -> None:
+    widths = [0, 10_000]
+    centers = layout_uniform(widths, 1_000, 20_000, 2_000)
+    onsets = [c - w // 2 for c, w in zip(centers, widths, strict=True)]
+    ends = [o + w for o, w in zip(onsets, widths, strict=True)]
+    assert onsets[0] >= 1_000 and onsets[1] >= ends[0] + 2_000 and ends[1] + 2_000 <= 20_000

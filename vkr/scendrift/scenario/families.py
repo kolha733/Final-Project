@@ -35,6 +35,7 @@ class FamilyInfo:
         supports_recurring: поддерживается ли возврат к прежнему концепту.
         calibrated: величина дрейфа имеет точную семантику единой шкалы.
         check: проверка ограничений семейства (возвращает нарушения).
+        params: допустимые ключи ``stream.family_params``.
     """
 
     name: str
@@ -44,6 +45,7 @@ class FamilyInfo:
     supports_recurring: bool
     calibrated: bool
     check: FamilyCheck | None = None
+    params: frozenset[str] = frozenset()
 
 
 _REGISTRY: dict[str, FamilyInfo] = {}

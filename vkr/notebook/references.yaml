@@ -1,203 +1,872 @@
-# Список литературы ВКР: единый источник для ноутбука и пояснительной записки.
-# key — ключ цитирования [@key]; gost — запись по ГОСТ Р 7.0.100-2018;
-# status: ok — данные сверены с первоисточником/dblp, check — требует проверки [ПРОВЕРИТЬ].
+# Список литературы ВКР — единый источник для ноутбука и пояснительной записки.
+# Записи структурированы; строку по ГОСТ Р 7.0.100-2018 формирует tools/gost.py.
+# key — ключ цитирования [@key]; status: ok — сверено (издатель, dblp или репозиторий авторов),
+# check — требует сверки с первоисточником (в списке помечается [ПРОВЕРИТЬ]).
 - key: gama2014
-  gost: 'Gama J., Žliobaitė I., Bifet A., Pechenizkiy M., Bouchachia A. A survey on concept drift adaptation // ACM Computing Surveys. 2014. Vol. 46, no. 4. Art. 44. P. 1–37. DOI: 10.1145/2523813.'
+  type: article
+  authors:
+  - Gama J.
+  - Žliobaitė I.
+  - Bifet A.
+  - Pechenizkiy M.
+  - Bouchachia A.
+  title: A survey on concept drift adaptation
+  journal: ACM Computing Surveys
+  year: 2014
+  volume: 46
+  number: 4
+  article: 44
+  pages: 1–37
+  doi: 10.1145/2523813
   status: ok
-  source: https://raw.githubusercontent.com/davidar/dblp.yaml/master/journals/csur.bib
+  lang: en
 - key: lu2019
-  gost: 'Lu J., Liu A., Dong F., Gu F., Gama J., Zhang G. Learning under concept drift: a review // IEEE Transactions on Knowledge and Data Engineering. 2019. Vol. 31, no. 12. P. 2346–2363. DOI: 10.1109/TKDE.2018.2876857.'
+  type: article
+  authors:
+  - Lu J.
+  - Liu A.
+  - Dong F.
+  - Gu F.
+  - Gama J.
+  - Zhang G.
+  title: 'Learning under concept drift: a review'
+  journal: IEEE Transactions on Knowledge and Data Engineering
+  year: 2019
+  volume: 31
+  number: 12
+  pages: 2346–2363
+  doi: 10.1109/TKDE.2018.2876857
   status: ok
-  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/69/2019.json
+  lang: en
 - key: webb2016
-  gost: 'Webb G. I., Hyde R., Cao H., Nguyen H. L., Petitjean F. Characterizing concept drift // Data Mining and Knowledge Discovery. 2016. Vol. 30, no. 4. P. 964–994. DOI: 10.1007/s10618-015-0448-4.'
+  type: article
+  authors:
+  - Webb G. I.
+  - Hyde R.
+  - Cao H.
+  - Nguyen H. L.
+  - Petitjean F.
+  title: Characterizing concept drift
+  journal: Data Mining and Knowledge Discovery
+  year: 2016
+  volume: 30
+  number: 4
+  pages: 964–994
+  doi: 10.1007/s10618-015-0448-4
   status: ok
-  source: https://github.com/fpetitjean/ConceptDriftGenerator
+  lang: en
 - key: morenotorres2012
-  gost: 'Moreno-Torres J. G., Raeder T., Alaiz-Rodríguez R., Chawla N. V., Herrera F. A unifying view on dataset shift in classification // Pattern Recognition. 2012. Vol. 45, no. 1. P. 521–530. DOI: 10.1016/j.patcog.2011.06.019.'
+  type: article
+  authors:
+  - Moreno-Torres J. G.
+  - Raeder T.
+  - Alaiz-Rodríguez R.
+  - Chawla N. V.
+  - Herrera F.
+  title: A unifying view on dataset shift in classification
+  journal: Pattern Recognition
+  year: 2012
+  volume: 45
+  number: 1
+  pages: 521–530
+  doi: 10.1016/j.patcog.2011.06.019
   status: ok
-  source: https://raw.githubusercontent.com/davidar/dblp.yaml/master/journals/pr.bib
+  lang: en
 - key: minku2010
-  gost: 'Minku L. L., White A. P., Yao X. The impact of diversity on online ensemble learning in the presence of concept drift // IEEE Transactions on Knowledge and Data Engineering. 2010. Vol. 22, no. 5. P. 730–742. DOI: 10.1109/TKDE.2009.156.'
+  type: article
+  authors:
+  - Minku L. L.
+  - White A. P.
+  - Yao X.
+  title: The impact of diversity on online ensemble learning in the presence of concept drift
+  journal: IEEE Transactions on Knowledge and Data Engineering
+  year: 2010
+  volume: 22
+  number: 5
+  pages: 730–742
+  doi: 10.1109/TKDE.2009.156
   status: ok
-  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/69/2010.json
+  lang: en
 - key: zliobaite2010
-  gost: 'Žliobaitė I. Learning under concept drift: an overview [Электронный ресурс] // arXiv. 2010. arXiv:1010.4784. URL: https://arxiv.org/abs/1010.4784 (дата обращения: 06.10.2026).'
+  type: online
+  authors:
+  - Žliobaitė I.
+  title: 'Learning under concept drift: an overview'
+  container: arXiv
+  year: 2010
+  eprint: arXiv:1010.4784
+  url: https://arxiv.org/abs/1010.4784
   status: ok
-  source: https://arxiv.org/abs/1010.4784
+  lang: en
 - key: ddm2004
-  gost: 'Gama J., Medas P., Castillo G., Rodrigues P. Learning with drift detection // Advances in Artificial Intelligence – SBIA 2004 : 17th Brazilian Symposium on Artificial Intelligence, São Luis, Maranhão, Brazil, September 29 – October 1, 2004 : Proceedings. Berlin ; Heidelberg : Springer, 2004. P. 286–295. (Lecture Notes in Computer Science ; vol. 3171). DOI: 10.1007/978-3-540-28645-5_29.'
+  type: inproceedings
+  authors:
+  - Gama J.
+  - Medas P.
+  - Castillo G.
+  - Rodrigues P.
+  title: Learning with drift detection
+  booktitle: 'Advances in Artificial Intelligence – SBIA 2004 : 17th Brazilian Symposium on Artificial Intelligence : proceedings'
+  place: Berlin ; Heidelberg
+  publisher: Springer
+  year: 2004
+  pages: 286–295
+  series: Lecture Notes in Computer Science ; vol. 3171
+  doi: 10.1007/978-3-540-28645-5_29
   status: ok
-  source: https://raw.githubusercontent.com/davidar/dblp.yaml/master/conf/sbia.bib
+  lang: en
 - key: eddm2006
-  gost: Baena-García M., del Campo-Ávila J., Fidalgo R., Bifet A., Gavaldà R., Morales-Bueno R. Early drift detection method // Fourth International Workshop on Knowledge Discovery from Data Streams (IWKDDS 2006), held with ECML PKDD 2006. Berlin, 2006. P. 77–86.
-  status: ok
-  source: https://github.com/online-ml/river/blob/main/river/drift/binary/eddm.py
+  type: inproceedings
+  authors:
+  - Baena-García M.
+  - del Campo-Ávila J.
+  - Fidalgo R.
+  - Bifet A.
+  - Gavaldà R.
+  - Morales-Bueno R.
+  title: Early drift detection method
+  booktitle: Fourth International Workshop on Knowledge Discovery from Data Streams (IWKDDS 2006), held with ECML PKDD 2006
+  place: Berlin
+  year: 2006
+  pages: 77–86
+  status: check
+  note: страницы не сверены с первоисточником (сборник не опубликован онлайн)
+  lang: en
 - key: adwin2007
-  gost: 'Bifet A., Gavaldà R. Learning from time-changing data with adaptive windowing // Proceedings of the 2007 SIAM International Conference on Data Mining (SDM 2007), Minneapolis, April 26–28, 2007. Philadelphia : SIAM, 2007. P. 443–448. DOI: 10.1137/1.9781611972771.42.'
+  type: inproceedings
+  authors:
+  - Bifet A.
+  - Gavaldà R.
+  title: Learning from time-changing data with adaptive windowing
+  booktitle: Proceedings of the 2007 SIAM International Conference on Data Mining
+  place: Philadelphia
+  publisher: SIAM
+  year: 2007
+  pages: 443–448
+  doi: 10.1137/1.9781611972771.42
   status: ok
-  source: https://epubs.siam.org/doi/10.1137/1.9781611972771.42
+  lang: en
 - key: kswin2020
-  gost: 'Raab C., Heusinger M., Schleif F.-M. Reactive soft prototype computing for concept drift streams // Neurocomputing. 2020. Vol. 416. P. 340–351. DOI: 10.1016/j.neucom.2019.11.111.'
+  type: article
+  authors:
+  - Raab C.
+  - Heusinger M.
+  - Schleif F.-M.
+  title: Reactive soft prototype computing for concept drift streams
+  journal: Neurocomputing
+  year: 2020
+  volume: 416
+  pages: 340–351
+  doi: 10.1016/j.neucom.2019.11.111
   status: ok
-  source: https://arxiv.org/abs/2007.05432
+  lang: en
 - key: page1954
-  gost: 'Page E. S. Continuous inspection schemes // Biometrika. 1954. Vol. 41, no. 1/2. P. 100–115. DOI: 10.1093/biomet/41.1-2.100.'
+  type: article
+  authors:
+  - Page E. S.
+  title: Continuous inspection schemes
+  journal: Biometrika
+  year: 1954
+  volume: 41
+  number: 1/2
+  pages: 100–115
+  doi: 10.1093/biomet/41.1-2.100
   status: ok
-  source: https://academic.oup.com/biomet/issue/41/1-2
+  lang: en
 - key: hddm2015
-  gost: 'Frías-Blanco I., del Campo-Ávila J., Ramos-Jiménez G., Morales-Bueno R., Ortiz-Díaz A., Caballero-Mota Y. Online and non-parametric drift detection methods based on Hoeffding''s bounds // IEEE Transactions on Knowledge and Data Engineering. 2015. Vol. 27, no. 3. P. 810–823. DOI: 10.1109/TKDE.2014.2345382.'
+  type: article
+  authors:
+  - Frías-Blanco I.
+  - del Campo-Ávila J.
+  - Ramos-Jiménez G.
+  - Morales-Bueno R.
+  - Ortiz-Díaz A.
+  - Caballero-Mota Y.
+  title: Online and non-parametric drift detection methods based on Hoeffding's bounds
+  journal: IEEE Transactions on Knowledge and Data Engineering
+  year: 2015
+  volume: 27
+  number: 3
+  pages: 810–823
+  doi: 10.1109/TKDE.2014.2345382
   status: ok
-  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/69/2015.json
+  lang: en
 - key: fhddm2016
-  gost: 'Pesaranghader A., Viktor H. L. Fast Hoeffding drift detection method for evolving data streams // Machine Learning and Knowledge Discovery in Databases : European Conference, ECML PKDD 2016, Riva del Garda, Italy, September 19–23, 2016 : Proceedings, Part II. Cham : Springer, 2016. P. 96–111. (Lecture Notes in Computer Science ; vol. 9852). DOI: 10.1007/978-3-319-46227-1_7.'
+  type: inproceedings
+  authors:
+  - Pesaranghader A.
+  - Viktor H. L.
+  title: Fast Hoeffding drift detection method for evolving data streams
+  booktitle: 'Machine Learning and Knowledge Discovery in Databases : European Conference, ECML PKDD 2016 : proceedings, part II'
+  place: Cham
+  publisher: Springer
+  year: 2016
+  pages: 96–111
+  series: Lecture Notes in Computer Science ; vol. 9852
+  doi: 10.1007/978-3-319-46227-1_7
   status: ok
-  source: https://mlanthology.org/ecmlpkdd/2016/pesaranghader2016ecmlpkdd-fast
+  lang: en
 - key: goemans1995
-  gost: 'Goemans M. X., Williamson D. P. Improved approximation algorithms for maximum cut and satisfiability problems using semidefinite programming // Journal of the ACM. 1995. Vol. 42, no. 6. P. 1115–1145. DOI: 10.1145/227683.227684.'
+  type: article
+  authors:
+  - Goemans M. X.
+  - Williamson D. P.
+  title: Improved approximation algorithms for maximum cut and satisfiability problems using semidefinite programming
+  journal: Journal of the ACM
+  year: 1995
+  volume: 42
+  number: 6
+  pages: 1115–1145
+  doi: 10.1145/227683.227684
   status: ok
-  source: https://raw.githubusercontent.com/davidar/dblp.yaml/master/journals/jacm.bib
+  lang: en
 - key: ditzler2011
-  gost: 'Ditzler G., Polikar R. Hellinger distance based drift detection for nonstationary environments // 2011 IEEE Symposium on Computational Intelligence in Dynamic and Uncertain Environments (CIDUE), Paris, France, 11–15 April 2011. IEEE, 2011. P. 41–48. DOI: 10.1109/CIDUE.2011.5948491.'
+  type: inproceedings
+  authors:
+  - Ditzler G.
+  - Polikar R.
+  title: Hellinger distance based drift detection for nonstationary environments
+  booktitle: 2011 IEEE Symposium on Computational Intelligence in Dynamic and Uncertain Environments (CIDUE)
+  place: Paris
+  publisher: IEEE
+  year: 2011
+  pages: 41–48
+  doi: 10.1109/CIDUE.2011.5948491
   status: ok
-  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/5936921/2011.json
+  lang: en
 - key: iwashita2019
-  gost: 'Iwashita A. S., Papa J. P. An overview on concept drift learning // IEEE Access. 2019. Vol. 7. P. 1532–1547. DOI: 10.1109/ACCESS.2018.2886026.'
+  type: article
+  authors:
+  - Iwashita A. S.
+  - Papa J. P.
+  title: An overview on concept drift learning
+  journal: IEEE Access
+  year: 2019
+  volume: 7
+  pages: 1532–1547
+  doi: 10.1109/ACCESS.2018.2886026
   status: ok
-  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/6287639/2019.json
+  lang: en
 - key: krawczyk2017
-  gost: 'Krawczyk B., Minku L. L., Gama J., Stefanowski J., Woźniak M. Ensemble learning for data stream analysis: a survey // Information Fusion. 2017. Vol. 37. P. 132–156. DOI: 10.1016/j.inffus.2017.02.004.'
+  type: article
+  authors:
+  - Krawczyk B.
+  - Minku L. L.
+  - Gama J.
+  - Stefanowski J.
+  - Woźniak M.
+  title: 'Ensemble learning for data stream analysis: a survey'
+  journal: Information Fusion
+  year: 2017
+  volume: 37
+  pages: 132–156
+  doi: 10.1016/j.inffus.2017.02.004
   status: ok
-  source: https://www.sciencedirect.com/science/article/pii/S1566253516302329
+  lang: en
 - key: hinder2024
-  gost: 'Hinder F., Vaquet V., Hammer B. One or two things we know about concept drift — a survey on monitoring in evolving environments. Part A: detecting concept drift // Frontiers in Artificial Intelligence. 2024. Vol. 7. Art. 1330257. DOI: 10.3389/frai.2024.1330257.'
+  type: article
+  authors:
+  - Hinder F.
+  - Vaquet V.
+  - Hammer B.
+  title: 'One or two things we know about concept drift — a survey on monitoring in evolving environments. Part A: detecting concept drift'
+  journal: Frontiers in Artificial Intelligence
+  year: 2024
+  volume: 7
+  article: 1330257
+  doi: 10.3389/frai.2024.1330257
   status: ok
-  source: https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2024.1330257/full
+  lang: en
 - key: hulten2001
-  gost: 'Hulten G., Spencer L., Domingos P. Mining time-changing data streams // Proceedings of the Seventh ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD ''01), San Francisco, California, 2001. New York : ACM, 2001. P. 97–106. DOI: 10.1145/502512.502529.'
+  type: inproceedings
+  authors:
+  - Hulten G.
+  - Spencer L.
+  - Domingos P.
+  title: Mining time-changing data streams
+  booktitle: 'KDD ''01 : Proceedings of the Seventh ACM SIGKDD International Conference on Knowledge Discovery and Data Mining'
+  place: New York
+  publisher: ACM
+  year: 2001
+  pages: 97–106
+  doi: 10.1145/502512.502529
   status: ok
-  source: https://raw.githubusercontent.com/boudinfl/acm-cr/master/data/acm-dl/kdd/kdd-2001.bib
+  lang: en
 - key: moabook2018
-  gost: 'Bifet A., Gavaldà R., Holmes G., Pfahringer B. Machine learning for data streams: with practical examples in MOA. Cambridge, MA : MIT Press, 2018. 288 p. (Adaptive Computation and Machine Learning). ISBN 978-0-262-03779-2. DOI: 10.7551/mitpress/10654.001.0001.'
+  type: book
+  authors:
+  - Bifet A.
+  - Gavaldà R.
+  - Holmes G.
+  - Pfahringer B.
+  title: Machine learning for data streams
+  subtitle: with practical examples in MOA
+  place: Cambridge, MA
+  publisher: MIT Press
+  year: 2018
+  pages_total: 288
+  series: Adaptive Computation and Machine Learning
+  isbn: 978-0-262-03779-2
+  doi: 10.7551/mitpress/10654.001.0001
   status: ok
-  source: https://direct.mit.edu/books/oa-monograph/4475/Machine-Learning-for-Data-Streamswith-Practical
+  lang: en
 - key: moa2010
-  gost: 'Bifet A., Holmes G., Kirkby R., Pfahringer B. MOA: Massive Online Analysis // Journal of Machine Learning Research. 2010. Vol. 11. P. 1601–1604.'
+  type: article
+  authors:
+  - Bifet A.
+  - Holmes G.
+  - Kirkby R.
+  - Pfahringer B.
+  title: 'MOA: Massive Online Analysis'
+  journal: Journal of Machine Learning Research
+  year: 2010
+  volume: 11
+  pages: 1601–1604
   status: ok
-  source: https://www.jmlr.org/papers/v11/bifet10a.html
+  lang: en
 - key: skmultiflow2018
-  gost: 'Montiel J., Read J., Bifet A., Abdessalem T. Scikit-Multiflow: A Multi-output Streaming Framework // Journal of Machine Learning Research. 2018. Vol. 19, no. 72. P. 1–5.'
+  type: article
+  authors:
+  - Montiel J.
+  - Read J.
+  - Bifet A.
+  - Abdessalem T.
+  title: 'Scikit-Multiflow: a multi-output streaming framework'
+  journal: Journal of Machine Learning Research
+  year: 2018
+  volume: 19
+  number: 72
+  pages: 1–5
   status: ok
-  source: https://github.com/scikit-multiflow/scikit-multiflow
+  lang: en
 - key: river2021
-  gost: 'Montiel J., Halford M., Mastelini S. M., Bolmier G., Sourty R., Vaysse R., Zouitine A., Gomes H. M., Read J., Abdessalem T., Bifet A. River: machine learning for streaming data in Python // Journal of Machine Learning Research. 2021. Vol. 22, no. 110. P. 1–8.'
+  type: article
+  authors:
+  - Montiel J.
+  - Halford M.
+  - Mastelini S. M.
+  - Bolmier G.
+  - Sourty R.
+  - Vaysse R.
+  - Zouitine A.
+  - Gomes H. M.
+  - Read J.
+  - Abdessalem T.
+  - Bifet A.
+  title: 'River: machine learning for streaming data in Python'
+  journal: Journal of Machine Learning Research
+  year: 2021
+  volume: 22
+  number: 110
+  pages: 1–8
   status: ok
-  source: https://www.jmlr.org/papers/v22/20-1380.html
+  lang: en
 - key: cdmoa2013
-  gost: 'Bifet A., Read J., Pfahringer B., Holmes G., Žliobaitė I. CD-MOA: Change Detection Framework for Massive Online Analysis // Advances in Intelligent Data Analysis XII : 12th International Symposium, IDA 2013, London, UK, October 17–19, 2013 : Proceedings / eds. A. Tucker, F. Höppner, A. Siebes, S. Swift. Berlin ; Heidelberg : Springer, 2013. P. 92–103. (Lecture Notes in Computer Science ; vol. 8207). DOI: 10.1007/978-3-642-41398-8_9.'
+  type: inproceedings
+  authors:
+  - Bifet A.
+  - Read J.
+  - Pfahringer B.
+  - Holmes G.
+  - Žliobaitė I.
+  title: 'CD-MOA: change detection framework for massive online analysis'
+  booktitle: 'Advances in Intelligent Data Analysis XII : 12th International Symposium, IDA 2013 : proceedings'
+  place: Berlin ; Heidelberg
+  publisher: Springer
+  year: 2013
+  pages: 92–103
+  series: Lecture Notes in Computer Science ; vol. 8207
+  doi: 10.1007/978-3-642-41398-8_9
   status: ok
-  source: https://link.springer.com/chapter/10.1007/978-3-642-41398-8_9
+  lang: en
 - key: barros2018
-  gost: 'Barros R. S. M., Santos S. G. T. C. A large-scale comparison of concept drift detectors // Information Sciences. 2018. Vol. 451–452. P. 348–370. DOI: 10.1016/j.ins.2018.04.014.'
+  type: article
+  authors:
+  - Barros R. S. M.
+  - Santos S. G. T. C.
+  title: A large-scale comparison of concept drift detectors
+  journal: Information Sciences
+  year: 2018
+  volume: 451–452
+  pages: 348–370
+  doi: 10.1016/j.ins.2018.04.014
   status: ok
-  source: https://doi.org/10.1016/j.ins.2018.04.014
+  lang: en
 - key: goncalves2014
-  gost: 'Gonçalves P. M. Jr., de Carvalho Santos S. G. T., Barros R. S. M., Vieira D. C. L. A comparative study on concept drift detectors // Expert Systems with Applications. 2014. Vol. 41, no. 18. P. 8144–8156. DOI: 10.1016/j.eswa.2014.07.019.'
+  type: article
+  authors:
+  - Gonçalves P. M. Jr.
+  - de Carvalho Santos S. G. T.
+  - Barros R. S. M.
+  - Vieira D. C. L.
+  title: A comparative study on concept drift detectors
+  journal: Expert Systems with Applications
+  year: 2014
+  volume: 41
+  number: 18
+  pages: 8144–8156
+  doi: 10.1016/j.eswa.2014.07.019
   status: ok
-  source: https://doi.org/10.1016/j.eswa.2014.07.019
+  lang: en
 - key: bifet2017
-  gost: 'Bifet A. Classifier Concept Drift Detection and the Illusion of Progress // Artificial Intelligence and Soft Computing : 16th International Conference, ICAISC 2017, Zakopane, Poland, June 11–15, 2017 : Proceedings. Part II / eds. L. Rutkowski, M. Korytkowski, R. Scherer [et al.]. Cham : Springer, 2017. P. 715–725. (Lecture Notes in Computer Science ; vol. 10246). DOI: 10.1007/978-3-319-59060-8_64.'
+  type: inproceedings
+  authors:
+  - Bifet A.
+  title: Classifier concept drift detection and the illusion of progress
+  booktitle: 'Artificial Intelligence and Soft Computing : 16th International Conference, ICAISC 2017 : proceedings, part II'
+  place: Cham
+  publisher: Springer
+  year: 2017
+  pages: 715–725
+  series: Lecture Notes in Computer Science ; vol. 10246
+  doi: 10.1007/978-3-319-59060-8_64
   status: ok
-  source: https://link.springer.com/chapter/10.1007/978-3-319-59060-8_64
+  lang: en
 - key: gama2013
-  gost: 'Gama J., Sebastião R., Rodrigues P. P. On evaluating stream learning algorithms // Machine Learning. 2013. Vol. 90, no. 3. P. 317–346. DOI: 10.1007/s10994-012-5320-9.'
+  type: article
+  authors:
+  - Gama J.
+  - Sebastião R.
+  - Rodrigues P. P.
+  title: On evaluating stream learning algorithms
+  journal: Machine Learning
+  year: 2013
+  volume: 90
+  number: 3
+  pages: 317–346
+  doi: 10.1007/s10994-012-5320-9
   status: ok
-  source: https://doi.org/10.1007/s10994-012-5320-9
+  lang: en
 - key: souza2020
-  gost: 'Souza V. M. A., dos Reis D. M., Maletzke A. G., Batista G. E. A. P. A. Challenges in benchmarking stream learning algorithms with real-world data // Data Mining and Knowledge Discovery. 2020. Vol. 34, no. 6. P. 1805–1858. DOI: 10.1007/s10618-020-00698-5.'
+  type: article
+  authors:
+  - Souza V. M. A.
+  - dos Reis D. M.
+  - Maletzke A. G.
+  - Batista G. E. A. P. A.
+  title: Challenges in benchmarking stream learning algorithms with real-world data
+  journal: Data Mining and Knowledge Discovery
+  year: 2020
+  volume: 34
+  number: 6
+  pages: 1805–1858
+  doi: 10.1007/s10618-020-00698-5
   status: ok
-  source: https://doi.org/10.1007/s10618-020-00698-5
+  lang: en
 - key: streamlearn2022
-  gost: 'Ksieniewicz P., Zyblewski P. stream-learn — open-source Python library for difficult data stream batch analysis // Neurocomputing. 2022. Vol. 478. P. 11–21. DOI: 10.1016/j.neucom.2021.10.120.'
+  type: article
+  authors:
+  - Ksieniewicz P.
+  - Zyblewski P.
+  title: stream-learn — open-source Python library for difficult data stream batch analysis
+  journal: Neurocomputing
+  year: 2022
+  volume: 478
+  pages: 11–21
+  doi: 10.1016/j.neucom.2021.10.120
   status: ok
-  source: https://github.com/w4k2/stream-learn
+  lang: en
 - key: frouros2024
-  gost: 'Céspedes Sisniega J., López García Á. Frouros: An open-source Python library for drift detection in machine learning systems // SoftwareX. 2024. Vol. 26. Art. 101733. DOI: 10.1016/j.softx.2024.101733.'
+  type: article
+  authors:
+  - Céspedes Sisniega J.
+  - López García Á.
+  title: 'Frouros: an open-source Python library for drift detection in machine learning systems'
+  journal: SoftwareX
+  year: 2024
+  volume: 26
+  article: 101733
+  doi: 10.1016/j.softx.2024.101733
   status: ok
-  source: https://github.com/IFCA-Advanced-Computing/frouros
+  lang: en
 - key: sea2001
-  gost: 'Street W. N., Kim Y. A streaming ensemble algorithm (SEA) for large-scale classification // KDD ''01 : Proceedings of the Seventh ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, San Francisco, August 26–29, 2001. New York : ACM, 2001. P. 377–382. DOI: 10.1145/502512.502568.'
+  type: inproceedings
+  authors:
+  - Street W. N.
+  - Kim Y.
+  title: A streaming ensemble algorithm (SEA) for large-scale classification
+  booktitle: 'KDD ''01 : Proceedings of the Seventh ACM SIGKDD International Conference on Knowledge Discovery and Data Mining'
+  place: New York
+  publisher: ACM
+  year: 2001
+  pages: 377–382
+  doi: 10.1145/502512.502568
   status: ok
-  source: https://dl.acm.org/doi/10.1145/502512.502568
+  lang: en
 - key: agrawal1993
-  gost: 'Agrawal R., Imielinski T., Swami A. Database mining: A performance perspective // IEEE Transactions on Knowledge and Data Engineering. 1993. Vol. 5, no. 6. P. 914–925. DOI: 10.1109/69.250074.'
+  type: article
+  authors:
+  - Agrawal R.
+  - Imielinski T.
+  - Swami A.
+  title: 'Database mining: a performance perspective'
+  journal: IEEE Transactions on Knowledge and Data Engineering
+  year: 1993
+  volume: 5
+  number: 6
+  pages: 914–925
+  doi: 10.1109/69.250074
   status: ok
-  source: https://doi.org/10.1109/69.250074
+  lang: en
 - key: stagger1986
-  gost: 'Schlimmer J. C., Granger R. H. Jr. Incremental learning from noisy data // Machine Learning. 1986. Vol. 1, no. 3. P. 317–354. DOI: 10.1007/BF00116895.'
+  type: article
+  authors:
+  - Schlimmer J. C.
+  - Granger R. H. Jr.
+  title: Incremental learning from noisy data
+  journal: Machine Learning
+  year: 1986
+  volume: 1
+  number: 3
+  pages: 317–354
+  doi: 10.1007/BF00116895
   status: ok
-  source: https://link.springer.com/article/10.1007/BF00116895
+  lang: en
 - key: harries1999
-  gost: 'Harries M. Splice-2 comparative evaluation: Electricity pricing : technical report. Sydney : The University of New South Wales, 1999.'
-  status: ok
-  source: https://github.com/Waikato/moa/blob/master/moa/src/main/latex/StreamMining/StreamMining.bib
+  type: report
+  authors:
+  - Harries M.
+  title: 'Splice-2 comparative evaluation: electricity pricing'
+  place: Sydney
+  publisher: The University of New South Wales
+  year: 1999
+  status: check
+  note: номер отчёта по первоисточнику не подтверждён
+  lang: en
 - key: demsar2006
-  gost: Demšar J. Statistical Comparisons of Classifiers over Multiple Data Sets // Journal of Machine Learning Research. 2006. Vol. 7. P. 1–30.
+  type: article
+  authors:
+  - Demšar J.
+  title: Statistical comparisons of classifiers over multiple data sets
+  journal: Journal of Machine Learning Research
+  year: 2006
+  volume: 7
+  pages: 1–30
   status: ok
-  source: https://www.jmlr.org/papers/v7/demsar06a.html
+  lang: en
 - key: friedman1937
-  gost: 'Friedman M. The Use of Ranks to Avoid the Assumption of Normality Implicit in the Analysis of Variance // Journal of the American Statistical Association. 1937. Vol. 32, no. 200. P. 675–701. DOI: 10.1080/01621459.1937.10503522.'
+  type: article
+  authors:
+  - Friedman M.
+  title: The use of ranks to avoid the assumption of normality implicit in the analysis of variance
+  journal: Journal of the American Statistical Association
+  year: 1937
+  volume: 32
+  number: 200
+  pages: 675–701
+  doi: 10.1080/01621459.1937.10503522
   status: ok
-  source: https://doi.org/10.1080/01621459.1937.10503522
+  lang: en
 - key: nemenyi1963
-  gost: 'Nemenyi P. B. Distribution-free multiple comparisons : PhD thesis. Princeton : Princeton University, 1963.'
+  type: thesis
+  authors:
+  - Nemenyi P. B.
+  title: Distribution-free multiple comparisons
+  thesis: PhD thesis
+  place: Princeton
+  publisher: Princeton University
+  year: 1963
   status: ok
-  source: https://mathgenealogy.org/id.php?id=29470
+  lang: en
 - key: wilcoxon1945
-  gost: 'Wilcoxon F. Individual Comparisons by Ranking Methods // Biometrics Bulletin. 1945. Vol. 1, no. 6. P. 80–83. DOI: 10.2307/3001968.'
+  type: article
+  authors:
+  - Wilcoxon F.
+  title: Individual comparisons by ranking methods
+  journal: Biometrics Bulletin
+  year: 1945
+  volume: 1
+  number: 6
+  pages: 80–83
+  doi: 10.2307/3001968
   status: ok
-  source: https://doi.org/10.2307/3001968
+  lang: en
 - key: holm1979
-  gost: Holm S. A Simple Sequentially Rejective Multiple Test Procedure // Scandinavian Journal of Statistics. 1979. Vol. 6, no. 2. P. 65–70.
+  type: article
+  authors:
+  - Holm S.
+  title: A simple sequentially rejective multiple test procedure
+  journal: Scandinavian Journal of Statistics
+  year: 1979
+  volume: 6
+  number: 2
+  pages: 65–70
   status: ok
-  source: https://www.jstor.org/stable/4615733
+  lang: en
 - key: lhs1979
-  gost: 'McKay M. D., Beckman R. J., Conover W. J. A Comparison of Three Methods for Selecting Values of Input Variables in the Analysis of Output from a Computer Code // Technometrics. 1979. Vol. 21, no. 2. P. 239–245. DOI: 10.1080/00401706.1979.10489755.'
+  type: article
+  authors:
+  - McKay M. D.
+  - Beckman R. J.
+  - Conover W. J.
+  title: A comparison of three methods for selecting values of input variables in the analysis of output from a computer code
+  journal: Technometrics
+  year: 1979
+  volume: 21
+  number: 2
+  pages: 239–245
+  doi: 10.1080/00401706.1979.10489755
   status: ok
-  source: https://doi.org/10.1080/00401706.1979.10489755
+  lang: en
 - key: sobol1967
-  gost: Соболь И. М. О распределении точек в кубе и приближенном вычислении интегралов // Журнал вычислительной математики и математической физики. 1967. Т. 7, № 4. С. 784–802.
+  type: article
+  lang: ru
+  authors:
+  - Соболь И. М.
+  title: О распределении точек в кубе и приближенном вычислении интегралов
+  journal: Журнал вычислительной математики и математической физики
+  year: 1967
+  volume: 7
+  number: 4
+  pages: 784–802
   status: ok
-  source: https://www.mathnet.ru/rus/zvmmf7334
 - key: scipy2020
-  gost: 'Virtanen P., Gommers R., Oliphant T. E. [et al.] SciPy 1.0: fundamental algorithms for scientific computing in Python // Nature Methods. 2020. Vol. 17, no. 3. P. 261–272. DOI: 10.1038/s41592-019-0686-2.'
+  type: article
+  authors:
+  - Virtanen P.
+  - Gommers R.
+  - Oliphant T. E.
+  - Haberland M.
+  - Reddy T.
+  title: 'SciPy 1.0: fundamental algorithms for scientific computing in Python'
+  journal: Nature Methods
+  year: 2020
+  volume: 17
+  number: 3
+  pages: 261–272
+  doi: 10.1038/s41592-019-0686-2
   status: ok
-  source: https://github.com/scipy/scipy/blob/main/CITATION.bib
+  lang: en
 - key: sklearn2011
-  gost: 'Pedregosa F., Varoquaux G., Gramfort A. [et al.] Scikit-learn: Machine Learning in Python // Journal of Machine Learning Research. 2011. Vol. 12. P. 2825–2830.'
+  type: article
+  authors:
+  - Pedregosa F.
+  - Varoquaux G.
+  - Gramfort A.
+  - Michel V.
+  - Thirion B.
+  title: 'Scikit-learn: machine learning in Python'
+  journal: Journal of Machine Learning Research
+  year: 2011
+  volume: 12
+  pages: 2825–2830
   status: ok
-  source: https://jmlr.org/papers/v12/pedregosa11a.html
+  lang: en
 - key: kendall1938
-  gost: 'Kendall M. G. A New Measure of Rank Correlation // Biometrika. 1938. Vol. 30, no. 1/2. P. 81–93. DOI: 10.1093/biomet/30.1-2.81.'
+  type: article
+  authors:
+  - Kendall M. G.
+  title: A new measure of rank correlation
+  journal: Biometrika
+  year: 1938
+  volume: 30
+  number: 1/2
+  pages: 81–93
+  doi: 10.1093/biomet/30.1-2.81
   status: ok
-  source: https://doi.org/10.1093/biomet/30.1-2.81
+  lang: en
 - key: lukats2025
-  gost: 'Lukats D., Zielinski O., Hahn A., Stahl F. A benchmark and survey of fully unsupervised concept drift detectors on real-world data streams // International Journal of Data Science and Analytics. 2025. Vol. 19, no. 1. P. 1–31. DOI: 10.1007/s41060-024-00620-y.'
+  type: article
+  authors:
+  - Lukats D.
+  - Zielinski O.
+  - Hahn A.
+  - Stahl F.
+  title: A benchmark and survey of fully unsupervised concept drift detectors on real-world data streams
+  journal: International Journal of Data Science and Analytics
+  year: 2025
+  volume: 19
+  number: 1
+  pages: 1–31
+  doi: 10.1007/s41060-024-00620-y
   status: ok
-  source: https://link.springer.com/article/10.1007/s41060-024-00620-y
+  lang: en
 - key: gost732
-  gost: 'ГОСТ 7.32–2017. Система стандартов по информации, библиотечному и издательскому делу. Отчет о научно-исследовательской работе. Структура и правила оформления : межгосударственный стандарт : издание официальное : введен в действие в качестве национального стандарта Российской Федерации Приказом Федерального агентства по техническому регулированию и метрологии от 24 октября 2017 г. № 1494-ст : взамен ГОСТ 7.32–2001 : дата введения 2018-07-01. Москва : Стандартинформ, 2017.'
+  type: standard
+  gost: 'ГОСТ 7.32–2017. Система стандартов по информации, библиотечному и издательскому делу. Отчет о научно-исследовательской работе. Структура и правила оформления : межгосударственный стандарт : издание официальное : введен в действие в качестве национального стандарта Российской Федерации Приказом Федерального агентства по техническому регулированию и метрологии от 24 октября 2017 г. № 1494-ст : взамен ГОСТ 7.32–2001 : дата введения 2018-07-01. – Москва : Стандартинформ, 2017. – Текст : непосредственный.'
   status: ok
-  source: Стандартинформ
+  lang: en
 - key: gost70100
-  gost: 'ГОСТ Р 7.0.100–2018. Система стандартов по информации, библиотечному и издательскому делу. Библиографическая запись. Библиографическое описание. Общие требования и правила составления : национальный стандарт Российской Федерации : издание официальное : утвержден и введен в действие Приказом Федерального агентства по техническому регулированию и метрологии от 3 декабря 2018 г. № 1050-ст : дата введения 2019-07-01. Москва : Стандартинформ, 2018.'
+  type: standard
+  gost: 'ГОСТ Р 7.0.100–2018. Система стандартов по информации, библиотечному и издательскому делу. Библиографическая запись. Библиографическое описание. Общие требования и правила составления : национальный стандарт Российской Федерации : издание официальное : утвержден и введен в действие Приказом Федерального агентства по техническому регулированию и метрологии от 3 декабря 2018 г. № 1050-ст : дата введения 2019-07-01. – Москва : Стандартинформ, 2018. – Текст : непосредственный.'
   status: ok
-  source: Стандартинформ
+  lang: en
 - key: plackett1954
-  gost: Plackett R. L. A reduction formula for normal multivariate integrals // Biometrika. 1954. Vol. 41, no. 3/4. P. 351–360.
+  type: article
+  authors:
+  - Plackett R. L.
+  title: A reduction formula for normal multivariate integrals
+  journal: Biometrika
+  year: 1954
+  volume: 41
+  number: 3/4
+  pages: 351–360
   status: ok
-  source: https://academic.oup.com/biomet/issue/41/3-4
+  lang: en
 - key: owen1956
-  gost: Owen D. B. Tables for computing bivariate normal probabilities // The Annals of Mathematical Statistics. 1956. Vol. 27, no. 4. P. 1075–1090.
+  type: article
+  authors:
+  - Owen D. B.
+  title: Tables for computing bivariate normal probabilities
+  journal: The Annals of Mathematical Statistics
+  year: 1956
+  volume: 27
+  number: 4
+  pages: 1075–1090
   status: ok
-  source: https://portal.mardi4nfdi.de/wiki/Tables_for_Computing_Bivariate_Normal_Probabilities
+  lang: en
+- key: capymoa2025
+  type: online
+  authors:
+  - Gomes H. M.
+  - Lee A.
+  - Gunasekara N.
+  et_al: true
+  title: 'CapyMOA: efficient machine learning for data streams in Python'
+  container: arXiv
+  year: 2025
+  eprint: arXiv:2502.07432
+  url: https://arxiv.org/abs/2502.07432
+  status: check
+  note: заглавие различается в версиях arXiv (v1/v2) — сверить с цитируемой версией
+  lang: en
+- key: cerqueira2026
+  type: online
+  authors:
+  - Cerqueira V.
+  - Gomes H. M.
+  - Heyden M.
+  - Pfahringer B.
+  - Bifet A.
+  title: A framework for evaluating and benchmarking concept drift detection methods
+  container: arXiv
+  year: 2026
+  eprint: arXiv:2606.07789
+  url: https://arxiv.org/abs/2606.07789
+  status: check
+  note: по сведениям из открытых источников принята на KDD 2026 — сверить итоговые выходные данные
+  lang: en
+- key: petitjean_cdg
+  type: online
+  authors:
+  - Petitjean F.
+  - Webb G. I.
+  title: 'ConceptDriftGenerator : MOA extension for generating categorical data streams with drift of a given magnitude'
+  container: GitHub
+  url: https://github.com/fpetitjean/ConceptDriftGenerator
+  status: ok
+  lang: en
+- key: carrera2018
+  type: article
+  authors:
+  - Carrera D.
+  - Boracchi G.
+  title: Generating high-dimensional datastreams for change detection
+  journal: Big Data Research
+  year: 2018
+  volume: 11
+  pages: 11–21
+  status: check
+  lang: en
+- key: aguiar2024
+  type: article
+  authors:
+  - Aguiar G. J.
+  - Cano A.
+  title: A comprehensive analysis of concept drift locality in data streams
+  journal: Knowledge-Based Systems
+  year: 2024
+  volume: 289
+  article: 111535
+  status: check
+  lang: en
+- key: brzezinski2021
+  type: article
+  authors:
+  - Brzezinski D.
+  - Minku L. L.
+  - Pewinski T.
+  - Stefanowski J.
+  - Szumaczuk A.
+  title: The impact of data difficulty factors on classification of imbalanced and concept drifting data streams
+  journal: Knowledge and Information Systems
+  year: 2021
+  volume: 63
+  pages: 1429–1469
+  status: check
+  lang: en
+- key: zliobaite2014
+  type: article
+  authors:
+  - Žliobaitė I.
+  title: Controlled permutations for testing adaptive learning models
+  journal: Knowledge and Information Systems
+  year: 2014
+  volume: 39
+  number: 3
+  pages: 565–578
+  status: ok
+  lang: en
+- key: munoz2018
+  type: article
+  authors:
+  - Muñoz M. A.
+  - Villanova L.
+  - Baatar D.
+  - Smith-Miles K.
+  title: Instance spaces for machine learning classification
+  journal: Machine Learning
+  year: 2018
+  volume: 107
+  pages: 109–147
+  status: check
+  lang: en
+- key: giobergia2024
+  type: online
+  authors:
+  - Giobergia F.
+  - Pastor E.
+  - de Alfaro L.
+  - Baralis E.
+  title: A synthetic benchmark to explore limitations of localized drift detections
+  container: arXiv
+  year: 2024
+  eprint: arXiv:2408.14687
+  url: https://arxiv.org/abs/2408.14687
+  status: check
+  lang: en
+- key: alippi2016
+  type: inproceedings
+  authors:
+  - Alippi C.
+  - Boracchi G.
+  - Carrera D.
+  - Roveri M.
+  title: 'Change detection in multivariate datastreams: likelihood and detectability loss'
+  booktitle: Proceedings of the Twenty-Fifth International Joint Conference on Artificial Intelligence (IJCAI 2016)
+  year: 2016
+  pages: 1368–1374
+  status: ok
+  lang: en
+- key: menelaus
+  type: online
+  org: The MITRE Corporation
+  title: 'Menelaus: online and batch-based concept and data drift detection algorithms'
+  container: GitHub
+  version: 0.2.0
+  year: 2022
+  url: https://github.com/mitre/menelaus
+  status: ok
+  lang: en
+- key: rabanser2019
+  type: inproceedings
+  authors:
+  - Rabanser S.
+  - Günnemann S.
+  - Lipton Z. C.
+  title: 'Failing loudly: an empirical study of methods for detecting dataset shift'
+  booktitle: Advances in Neural Information Processing Systems 32 (NeurIPS 2019)
+  year: 2019
+  status: check
+  note: страницы не указаны
+  lang: en

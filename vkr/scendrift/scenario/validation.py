@@ -5,10 +5,11 @@
 Локальные ограничения (C1–C3) проверяет pydantic при создании модели.
 Модуль добавляет:
 
-* ограничения временной разметки (C4–C6) и ссылок возврата (C7), общие для
-  всех семейств;
-* поддержку вида и формы дрейфа семейством (C8, C13);
-* ограничения семейства (для ``hyperplane_gauss``: C9–C12);
+* ограничения временной разметки (C4–C6, C14) и ссылок возврата (C7),
+  общие для всех семейств;
+* поддержку вида, формы и параметров семейством (C8, C13);
+* ограничения семейства (для ``hyperplane_gauss``: C7 по распределению,
+  C9–C12 и предупреждение W3);
 * предупреждения W1, W2.
 
 Функция :func:`repair` нужна модулю формирования сценариев (этап 3): она
@@ -54,10 +55,18 @@ def concept_ids(spec: ScenarioSpec) -> list[int | None]:
 
 
 def _check_timeline(spec: ScenarioSpec) -> list[Violation]:
-    """C4–C7: разогрев, хвост, непересечение следов, ссылки возврата."""
+    """C4–C7, C14: разогрев, хвост, непересечение следов, ссылки возврата."""
     out: list[Violation] = []
     ev, n = spec.events, spec.stream.n_samples
     delta, warmup = spec.evaluation.acceptance_window, spec.evaluation.warmup
+    if warmup + delta > n:
+        out.append(
+            Violation(
+                "C14",
+                f"W + Δ = {warmup + delta} > n = {n}: протокол оценки не помещается в поток",
+                "evaluation.warmup",
+            )
+        )
     if not ev:
         return out
     if ev[0].onset < warmup:
@@ -122,6 +131,15 @@ def _check_support(spec: ScenarioSpec) -> list[Violation]:
             out.append(Violation("C8", f"вид {event.kind} не поддерживается", f"{path}.kind"))
         if event.form not in fam.forms:
             out.append(Violation("C8", f"форма {event.form} не поддерживается", f"{path}.form"))
+    unknown = sorted(set(spec.stream.family_params) - fam.params)
+    if unknown:
+        out.append(
+            Violation(
+                "C8",
+                f"семейство {fam.name!r} не знает параметров {unknown}",
+                "stream.family_params",
+            )
+        )
     return out
 
 
@@ -205,13 +223,30 @@ class RepairResult:
 
 
 def _relayout(spec: ScenarioSpec, actions: list[str]) -> ScenarioSpec:
-    """Переносит события по равномерному расписанию; при нехватке места отбрасывает хвост."""
+    """Переносит события по равномерному расписанию; при нехватке места отбрасывает хвост.
+
+    Raises:
+        ScenarioValidationError: если в поток не помещается ни одно событие
+            (иначе сценарий дрейфа молча превратился бы в сценарий без дрейфа).
+    """
     events = list(spec.events)
     n, delta = spec.stream.n_samples, spec.evaluation.acceptance_window
     warmup = spec.evaluation.warmup
     while events and sum(e.width + delta for e in events) > n - warmup:
         events.pop()
         actions.append(f"C4–C6: событие {len(events)} отброшено — не хватает длины потока")
+    if spec.events and not events:
+        raise ScenarioValidationError(
+            ValidationReport(
+                [
+                    Violation(
+                        "C5",
+                        f"ни одно событие не помещается в поток: ℓ₁ + Δ > n − W = {n - warmup}",
+                        "events[0].width",
+                    )
+                ]
+            )
+        )
     centers = layout_uniform([e.width for e in events], warmup, n, delta)
     moved = [e.model_copy(update={"position": c}) for e, c in zip(events, centers, strict=True)]
     actions.append(f"C4–C6: события перенесены на позиции {centers}")
@@ -219,12 +254,14 @@ def _relayout(spec: ScenarioSpec, actions: list[str]) -> ScenarioSpec:
 
 
 def repair(spec: ScenarioSpec, *, max_iter: int | None = None) -> RepairResult:
-    """Делает сценарий допустимым минимальными изменениями.
+    """Делает сценарий допустимым: проецирует его на допустимую область.
 
     Порядок действий:
 
-    1. При нарушении C4–C6 события переносятся по равномерному расписанию,
-       а если их следы не помещаются в поток, последние события отбрасываются.
+    1. При нарушении C4–C6 все события переносятся по равномерному
+       расписанию (:func:`~scendrift.scenario.schema.layout_uniform`). Если
+       следы не помещаются в поток, последние события отбрасываются (K
+       уменьшается); если не помещается ни одно — исправление невозможно.
     2. Затем по одному событию, от первого к последнему, применяются
        допустимые значения, предложенные валидатором (C9–C12). Действовать
        приходится последовательно, потому что каждое событие меняет
@@ -232,7 +269,7 @@ def repair(spec: ScenarioSpec, *, max_iter: int | None = None) -> RepairResult:
 
     Raises:
         ScenarioValidationError: если сценарий невозможно исправить
-            (например, C7, C8 или C13).
+            (например, C7, C8, C13, C14 или ни одно событие не помещается в поток).
     """
     actions: list[str] = []
     report = check(spec)

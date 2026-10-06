@@ -42,6 +42,7 @@ def test_demo_is_valid(demo_spec: ScenarioSpec) -> None:
         ([{"position": 5_000, "magnitude": 0.995, "kind": "virtual"}], {}, "C11"),
         ([{"position": 5_000, "magnitude": 0.6, "kind": "prior"}], {}, "C12"),
         ([{"position": 5_000, "magnitude": 0.2}], {"family": "nope"}, "C13"),
+        ([{"position": 5_000, "magnitude": 0.2}], {"family_params": {"noize": 0.3}}, "C8"),
     ],
 )
 def test_constraint_violations(events: list, stream: dict, code: str) -> None:
@@ -163,3 +164,46 @@ def test_repair_unrepairable_raises() -> None:
         repair(_spec([{"position": 5_000, "magnitude": 0.2}], family="nope"))
     with pytest.raises(ScenarioValidationError):
         repair(_spec([{"position": 5_000, "returns_to": 0}]))
+
+
+def test_protocol_must_fit_stream_c14() -> None:
+    spec = io.from_dict(
+        {"stream": {"n_samples": 2_000}, "evaluation": {"warmup": 1_500}, "events": []}
+    )
+    assert "C14" in check(spec).codes()
+
+
+def test_repair_handles_unequal_widths() -> None:
+    # следы 2000 + 12000 ≤ n − W = 19000: допустимая раскладка существует
+    spec = _spec(
+        [
+            {"position": 1_500, "magnitude": 0.2},
+            {"position": 6_000, "form": "gradual", "width": 10_000, "magnitude": 0.2},
+        ]
+    )
+    result = repair(spec)
+    assert result.report.ok and len(result.spec.events) == 2
+
+
+def test_repair_refuses_to_drop_all_events() -> None:
+    spec = io.from_dict(
+        {
+            "stream": {"n_samples": 2_500},
+            "evaluation": {"warmup": 0},
+            "events": [{"position": 1_200, "form": "gradual", "width": 1_000, "magnitude": 0.2}],
+        }
+    )
+    with pytest.raises(ScenarioValidationError):
+        repair(spec)
+
+
+def test_real_after_prior_gives_w3_warning() -> None:
+    spec = _spec(
+        [
+            {"position": 4_000, "kind": "prior", "magnitude": 0.2},
+            {"position": 9_000, "kind": "real", "magnitude": 0.2},
+        ],
+        minority_share=0.3,
+    )
+    report = check(spec)
+    assert report.ok and "W3" in report.codes()

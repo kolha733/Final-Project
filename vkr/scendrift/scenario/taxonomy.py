@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 
+from scendrift.scenario.enums import DriftKind
 from scendrift.scenario.schema import ScenarioSpec
 
 __all__ = [
@@ -43,8 +44,8 @@ class ScenarioClass:
         kinds: виды обычных событий (отсортированы).
         recurring: есть ли возврат к прежнему концепту.
         severity: класс наибольшей заданной величины: none/low/medium/high.
-        speed: abrupt (все w = 0), fast или slow (по наибольшей ширине).
-        scope: global (α = 1 у всех событий) или partial.
+        speed: abrupt (все ℓ = 0), fast или slow (по наибольшей ширине).
+        scope: global (α = 1 у всех событий real/virtual), partial или n/a (их нет).
         balance: balanced или imbalanced.
         noise: clean (η = 0) или noisy.
     """
@@ -71,6 +72,14 @@ def _severity_class(m: float | None) -> str:
     return "low" if m < low else ("medium" if m < high else "high")
 
 
+def _scope(regular: list) -> str:
+    """Охват: α учитывается только у real и virtual (у prior он не используется)."""
+    spatial = [e for e in regular if e.kind in (DriftKind.REAL, DriftKind.VIRTUAL)]
+    if not spatial:
+        return "n/a"
+    return "global" if all(e.affected_share == 1.0 for e in spatial) else "partial"
+
+
 def classify(spec: ScenarioSpec) -> ScenarioClass:
     """Относит сценарий к классам таксономии."""
     events = spec.events
@@ -90,7 +99,7 @@ def classify(spec: ScenarioSpec) -> ScenarioClass:
         recurring=any(e.returns_to is not None for e in events),
         severity=_severity_class(max(magnitudes) if magnitudes else None),
         speed=speed,
-        scope="global" if all(e.affected_share == 1.0 for e in regular) else "partial",
+        scope=_scope(regular),
         balance="balanced" if spec.stream.minority_share >= BALANCED_SHARE else "imbalanced",
         noise="clean" if spec.stream.label_noise == 0.0 else "noisy",
     )

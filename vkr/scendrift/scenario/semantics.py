@@ -5,40 +5,48 @@ r"""Семантика величины дрейфа и цепочка конц�
 **Модель семейства.** Концепт k задаётся состоянием (w_k, μ_k, π_k):
 
 * w_k ∈ ℝᵈ, ‖w_k‖ = 1 — нормаль разделяющей гиперплоскости;
-* μ_k ∈ ℝᵈ — центр распределения признаков N(μ_k, I);
+* μ_k ∈ ℝᵈ — центр базового распределения признаков N(μ_k, I);
 * π_k — текущая доля положительного класса P(y = 1).
 
-Метка задаётся правилом y = 1[w_kᵀ(x − μ_k) > z], где z = Φ⁻¹(1 − π₀), а π₀ —
-исходная доля класса (``minority_share``). Объекты порождаются по схеме
-label shift: сначала y ~ Bernoulli(π_k), затем x | y из N(μ_k, I),
-усечённого на соответствующее полупространство. В итоге каждый вид дрейфа
-меняет ровно одну компоненту P(X, y):
+Метка задаётся правилом g_k(x) = 1[w_kᵀ(x − μ_k) > z], где z = Φ⁻¹(1 − π₀),
+а π₀ — исходная доля класса (``minority_share``). Объекты порождаются по
+схеме label shift: сначала y ~ Bernoulli(π_k), затем x | y из N(μ_k, I),
+усечённого на полупространство класса y. Плотность P_k(X) равна
+N(x; μ_k, I), перевзвешенной множителями π_k/π₀ и (1 − π_k)/(1 − π₀) на
+полупространствах классов.
 
-* **real** — поворот w в подпространстве затронутых признаков A: меняется
-  P(y|X), а P(X) и P(y) сохраняются (порог отсчитывается от μ_k);
-* **virtual** — сдвиг μ вдоль направления v ⊥ w внутри A: меняется P(X),
+Каждый вид дрейфа меняет ровно одну **группу параметров** концепта:
+
+* **real** — поворот w внутри подпространства затронутых признаков A.
+  Меняется P(y|X), P(y) сохраняется. P(X) сохраняется при π_k = π₀, а при
+  π_k ≠ π₀ меняется через перевзвешивание классов (предупреждение W3);
+* **virtual** — сдвиг μ на δv, где v ⊥ w и supp v ⊆ A. Меняется P(X),
   а P(y|X) и P(y) сохраняются;
-* **prior** — изменение π_k: меняется P(y), а P(X|y) сохраняется.
+* **prior** — изменение π_k. Меняется P(y), а P(X|y) и P(y|X) сохраняются
+  (для чистых меток; шум меток η > 0 делает наблюдаемое P(X|ỹ) зависящим от π).
 
-**Единая шкала величины m ∈ (0, 1].**
+**Единая шкала величины: расстояние полной вариации (TV).** Величина
+обычного события — m = TV(P_k(X, y), P_{k+1}(X, y)) для чистых меток. Для
+каждого вида это расстояние имеет точную форму:
 
-* real: m = P_{x∼P_k}(c_k(x) ≠ c_{k+1}(x)) — доля пространства, на которой
-  меняется метка (severity по Minku et al., 2010). Для угла θ между нормалями
+* real: m = P_{x∼P_k}(g_k(x) ≠ g_{k+1}(x)), то есть доля смены метки
+  (severity по Minku et al., 2010). Для угла θ между нормалями
 
   .. math:: m(θ) = (π₀ − Φ₂(−z, −z; \cos θ))\,(π_k/π₀ + (1 − π_k)/(1 − π₀)),
 
-  что при π₀ = π_k = 0,5 даёт известное тождество m = θ/π.
-  При повороте в A наибольший угол θ_max = arccos(1 − 2s), где s = ‖w_A‖².
-  Отсюда m_max = m(θ_max) (ограничение C10).
-* virtual: m = H(N(μ, I), N(μ + δv, I)) = √(1 − exp(−δ²/8)) — расстояние
-  Хеллингера, откуда δ = √(−8 ln(1 − m²)). Так как сдвиг ортогонален w, а
-  x раскладывается на независимые компоненты вдоль w и в w⊥, равенство
-  точно выполняется и при перевзвешивании классов.
+  что при π₀ = π_k = 0,5 даёт тождество m = θ/π. При повороте внутри A
+  наибольший угол равен θ_max = arccos(1 − 2q), где q = ‖w_A‖², откуда
+  m_max = m(θ_max) (ограничение C10);
+* virtual: m = 2Φ(δ/2) − 1 (TV сдвинутых гауссиан), откуда
+  δ = 2Φ⁻¹((1 + m)/2). Равенство точное и при перевзвешивании классов:
+  плотность раскладывается на компоненту вдоль w, от которой зависит
+  класс, и независимую гауссову компоненту в w⊥, а сдвиг затрагивает
+  только вторую;
 * prior: m = |π_{k+1} − π_k|.
 
-Вся случайность геометрии (выбор A, направления u и v) определяется
-структурным seed c и номером события. Поэтому цепочка концептов не
-зависит от seed реализации, и проверку допустимости
+Вся случайность геометрии (выбор A, направления поворота и сдвига)
+определяется структурным seed c и номером события. Поэтому цепочка
+концептов не зависит от seed реализации, и проверку допустимости
 (:func:`build_chain`) можно провести без порождения данных.
 """
 
@@ -58,14 +66,15 @@ from scendrift.scenario.schema import MIN_CLASS_SHARE, DriftEvent, ScenarioSpec
 __all__ = [
     "FAMILY",
     "MAX_VIRTUAL_MAGNITUDE",
+    "ZERO_DRIFT",
     "bvn_cdf",
     "real_severity_from_angle",
     "max_real_severity",
     "angle_for_severity",
     "rotation_for_angle",
     "angle_for_rotation",
-    "hellinger_shift",
-    "hellinger_gauss",
+    "tv_shift",
+    "tv_gauss",
     "prior_target",
     "affected_count",
     "ConceptState",
@@ -78,8 +87,11 @@ __all__ = [
 
 FAMILY = "hyperplane_gauss"
 
-#: Верхняя граница величины виртуального дрейфа (H = 1 недостижимо).
+#: Верхняя граница величины виртуального дрейфа (TV = 1 недостижимо при конечном сдвиге).
 MAX_VIRTUAL_MAGNITUDE = 0.99
+
+#: Порог, ниже которого возврат к концепту считается не меняющим распределение (C7).
+ZERO_DRIFT = 1e-9
 
 #: Метка подпотока ГСЧ для геометрии события (см. :func:`_event_rng`).
 _EVENT_STREAM_TAG = 2_000_003
@@ -113,7 +125,7 @@ def bvn_cdf(h: float, k: float, rho: float) -> float:
         return float(0.5 * ndtr(h) - owens_t(h, -rho / s))
     a_h = (k - rho * h) / (h * s)
     a_k = (h - rho * k) / (k * s)
-    beta = 0.0 if h * k > 0 else 0.5
+    beta = 0.0 if (h > 0.0) == (k > 0.0) else 0.5  # по знакам: h·k может обнулиться
     value = 0.5 * ndtr(h) + 0.5 * ndtr(k) - owens_t(h, a_h) - owens_t(k, a_k) - beta
     return float(min(1.0, max(0.0, value)))
 
@@ -141,15 +153,15 @@ def real_severity_from_angle(theta: float, pi0: float, prior: float) -> float:
     return float((pi0 - joint) * _class_weight(pi0, prior))
 
 
-def max_real_severity(s: float, pi0: float, prior: float) -> float:
-    """Наибольшая величина, достижимая поворотом в A при s = ‖w_A‖²."""
-    if s <= 0.0:
+def max_real_severity(q: float, pi0: float, prior: float) -> float:
+    """Наибольшая величина, достижимая поворотом внутри A при q = ‖w_A‖²."""
+    if q <= 0.0:
         return 0.0
-    theta_max = math.acos(min(1.0, max(-1.0, 1.0 - 2.0 * s)))
+    theta_max = math.acos(min(1.0, max(-1.0, 1.0 - 2.0 * q)))
     return real_severity_from_angle(theta_max, pi0, prior)
 
 
-def angle_for_severity(m: float, s: float, pi0: float, prior: float) -> float:
+def angle_for_severity(m: float, q: float, pi0: float, prior: float) -> float:
     """Угол θ, при котором величина реального дрейфа равна m.
 
     m(θ) строго возрастает на [0, π], поскольку Φ₂(−z, −z; ρ) возрастает
@@ -159,7 +171,7 @@ def angle_for_severity(m: float, s: float, pi0: float, prior: float) -> float:
     Raises:
         ValueError: если m > m_max(s).
     """
-    theta_max = math.acos(min(1.0, max(-1.0, 1.0 - 2.0 * s)))
+    theta_max = math.acos(min(1.0, max(-1.0, 1.0 - 2.0 * q)))
     m_max = real_severity_from_angle(theta_max, pi0, prior)
     if m > m_max * (1.0 + _TOL) + _TOL:
         raise ValueError(f"величина {m:.6g} недостижима: m_max = {m_max:.6g}")
@@ -176,18 +188,18 @@ def angle_for_severity(m: float, s: float, pi0: float, prior: float) -> float:
     )
 
 
-def rotation_for_angle(theta: float, s: float) -> float:
-    """Угол поворота φ внутри A, дающий угол θ между нормалями.
+def rotation_for_angle(theta: float, q: float) -> float:
+    """Угол поворота ψ внутри A, дающий угол θ между нормалями.
 
-    Из cos θ = 1 − s(1 − cos φ) следует cos φ = 1 − (1 − cos θ)/s.
+    Из cos θ = 1 − q(1 − cos ψ) следует cos ψ = 1 − (1 − cos θ)/q.
     """
-    cos_phi = 1.0 - (1.0 - math.cos(theta)) / s
-    return math.acos(min(1.0, max(-1.0, cos_phi)))
+    cos_psi = 1.0 - (1.0 - math.cos(theta)) / q
+    return math.acos(min(1.0, max(-1.0, cos_psi)))
 
 
-def angle_for_rotation(phi: float, s: float) -> float:
-    """Угол θ между нормалями при повороте на φ внутри A (‖w_A‖² = s)."""
-    return math.acos(min(1.0, max(-1.0, 1.0 - s * (1.0 - math.cos(phi)))))
+def angle_for_rotation(psi: float, q: float) -> float:
+    """Угол θ между нормалями при повороте на ψ внутри A (‖w_A‖² = q)."""
+    return math.acos(min(1.0, max(-1.0, 1.0 - q * (1.0 - math.cos(psi)))))
 
 
 # ---------------------------------------------------------------------------
@@ -195,16 +207,19 @@ def angle_for_rotation(phi: float, s: float) -> float:
 # ---------------------------------------------------------------------------
 
 
-def hellinger_shift(m: float) -> float:
-    """Норма сдвига среднего δ, при которой H(N(μ, I), N(μ + δv, I)) = m."""
+def tv_shift(m: float) -> float:
+    """Норма сдвига среднего δ, при которой TV(N(μ, I), N(μ + δv, I)) = m.
+
+    Из TV = 2Φ(δ/2) − 1 следует δ = 2Φ⁻¹((1 + m)/2).
+    """
     if not 0.0 <= m < 1.0:
         raise ValueError("величина виртуального дрейфа должна лежать в [0, 1)")
-    return math.sqrt(-8.0 * math.log1p(-m * m))
+    return float(2.0 * ndtri((1.0 + m) / 2.0))
 
 
-def hellinger_gauss(delta: float) -> float:
-    """Расстояние Хеллингера между N(μ, I) и N(μ + δv, I), где ‖v‖ = 1."""
-    return math.sqrt(-math.expm1(-delta * delta / 8.0))
+def tv_gauss(delta: float) -> float:
+    """TV-расстояние между N(μ, I) и N(μ + δv, I), где ‖v‖ = 1: 2Φ(δ/2) − 1."""
+    return float(math.erf(delta / (2.0 * math.sqrt(2.0))))
 
 
 def prior_target(prior: float, m: float) -> float | None:
@@ -266,28 +281,37 @@ def initial_state(n_features: int, pi0: float) -> ConceptState:
 
 
 def _real_component(a: ConceptState, b: ConceptState) -> float:
-    """P_{x∼P_a}(c_a(x) ≠ c_b(x)) для произвольных состояний a и b."""
+    """P_{x∼P_a}(g_a(x) ≠ g_b(x)) для произвольных состояний a и b.
+
+    Для поворота нормали (μ и π не меняются) эта величина равна
+    TV(P_a(X, y), P_b(X, y)), в том числе при π ≠ π₀.
+    """
     rho = float(np.clip(a.w @ b.w, -1.0, 1.0))
     z = a.z
     z_b = z + float(b.w @ (b.mu - a.mu))
-    p_u = float(ndtr(-z))  # P(c_a = 1) по базовой гауссиане
-    p_v = float(ndtr(-z_b))  # P(c_b = 1) по базовой гауссиане P_a
-    p_uv = bvn_cdf(-z, -z_b, rho)  # P(c_a = 1, c_b = 1)
-    flip_pos = (p_u - p_uv) / p_u  # P(c_b = 0 | c_a = 1)
-    flip_neg = (p_v - p_uv) / (1.0 - p_u)  # P(c_b = 1 | c_a = 0)
+    p_u = float(ndtr(-z))  # P(g_a = 1) по базовой гауссиане
+    p_v = float(ndtr(-z_b))  # P(g_b = 1) по базовой гауссиане N(μ_a, I)
+    p_uv = bvn_cdf(-z, -z_b, rho)  # P(g_a = 1, g_b = 1)
+    flip_pos = (p_u - p_uv) / p_u  # P(g_b = 0 | g_a = 1)
+    flip_neg = (p_v - p_uv) / (1.0 - p_u)  # P(g_b = 1 | g_a = 0)
     return float(max(0.0, a.prior * flip_pos + (1.0 - a.prior) * flip_neg))
 
 
 def drift_components(a: ConceptState, b: ConceptState) -> dict[str, float]:
-    """Разложение перехода a → b по трём компонентам единой шкалы.
+    """Разложение перехода a → b по группам параметров концепта (шкала TV).
 
-    Returns:
-        Словарь ``{"real": D, "virtual": H, "prior": |Δπ|}``. Для обычного
-        события одного вида ненулевой будет только его компонента.
+    * ``real`` — доля смены метки P_{x∼P_a}(g_a ≠ g_b) (поворот нормали);
+    * ``virtual`` — TV между базовыми распределениями N(μ_a, I) и N(μ_b, I);
+    * ``prior`` — |π_b − π_a|.
+
+    Для обычного события ненулевой будет только компонента его вида, и она
+    равна TV(P_a(X, y), P_b(X, y)), то есть заданной величине m. Для
+    повторяющегося события компоненты описывают, какие группы параметров
+    изменились.
     """
     return {
         DriftKind.REAL.value: _real_component(a, b),
-        DriftKind.VIRTUAL.value: hellinger_gauss(float(np.linalg.norm(b.mu - a.mu))),
+        DriftKind.VIRTUAL.value: tv_gauss(float(np.linalg.norm(b.mu - a.mu))),
         DriftKind.PRIOR.value: abs(b.prior - a.prior),
     }
 
@@ -307,8 +331,8 @@ class EventGeometry:
         target: номер состояния в цепочке, к которому ведёт событие (index + 1).
         returns_to: номер концепта возврата (для повторяющегося события).
         affected: индексы затронутых признаков A.
-        direction: единичное направление u (real) или v (virtual) в A, ⊥ w.
-        rotation: угол поворота φ внутри A (real).
+        direction: единичное направление поворота (real) или сдвига (virtual) в A, ⊥ w.
+        rotation: угол поворота ψ внутри A (real).
         angle: угол θ между нормалями до и после (real).
         shift: норма сдвига среднего δ (virtual).
         realized: фактическая величина по компонентам (см. drift_components).
@@ -420,35 +444,46 @@ def _apply_event(
                 suggestion=MAX_VIRTUAL_MAGNITUDE,
             )
             return unchanged, EventGeometry(idx, kind, idx + 1, affected=subset), [v]
-        delta = hellinger_shift(m)
+        delta = tv_shift(m)
         new = ConceptState(state.w, state.mu + delta * direction, state.prior, state.pi0, new_id)
         geom = EventGeometry(idx, kind, idx + 1, affected=subset, direction=direction, shift=delta)
         return new, geom, []
 
     # Реальный дрейф: поворот w внутри A.
-    s = float(state.w[subset] @ state.w[subset])
-    m_max = max_real_severity(s, state.pi0, state.prior)
+    q = float(state.w[subset] @ state.w[subset])
+    m_max = max_real_severity(q, state.pi0, state.prior)
     if m > m_max * (1.0 + _TOL) + _TOL:
         v = Violation(
             "C10",
             f"величина реального дрейфа {m:.4g} недостижима поворотом в A: "
-            f"m_max = {m_max:.4g} (‖w_A‖² = {s:.3g})",
+            f"m_max = {m_max:.4g} (q = ‖w_A‖² = {q:.3g})",
             f"{path}.magnitude",
             suggestion=m_max,
         )
         return unchanged, EventGeometry(idx, kind, idx + 1, affected=subset), [v]
-    theta = angle_for_severity(m, s, state.pi0, state.prior)
-    phi = rotation_for_angle(theta, s)
+    theta = angle_for_severity(m, q, state.pi0, state.prior)
+    psi = rotation_for_angle(theta, q)
     w_new = state.w.copy()
     w_new[subset] = (
-        math.cos(phi) * state.w[subset] + math.sin(phi) * math.sqrt(s) * (direction[subset])
+        math.cos(psi) * state.w[subset] + math.sin(psi) * math.sqrt(q) * (direction[subset])
     )
     w_new /= np.linalg.norm(w_new)
     new = ConceptState(w_new, state.mu, state.prior, state.pi0, new_id)
     geom = EventGeometry(
-        idx, kind, idx + 1, affected=subset, direction=direction, rotation=phi, angle=theta
+        idx, kind, idx + 1, affected=subset, direction=direction, rotation=psi, angle=theta
     )
-    return new, geom, []
+    issues = []
+    if abs(state.prior - state.pi0) > _TOL:
+        issues.append(
+            Violation(
+                "W3",
+                f"реальный дрейф при π_k = {state.prior:.3g} ≠ π₀ = {state.pi0:.3g}: "
+                "меняется также P(X) (через перевзвешивание классов)",
+                f"{path}.kind",
+                level="warning",
+            )
+        )
+    return new, geom, issues
 
 
 def build_chain(spec: ScenarioSpec) -> ConceptChain:
@@ -457,6 +492,7 @@ def build_chain(spec: ScenarioSpec) -> ConceptChain:
     Данные при этом не порождаются: вычисляются только состояния концептов,
     геометрия событий и фактические величины. Если событие нереализуемо,
     в цепочку записывается неизменённый концепт и нарушение (C7, C9–C12).
+    Реальный дрейф при π_k ≠ π₀ сопровождается предупреждением W3.
 
     Args:
         spec: сценарий семейства ``hyperplane_gauss``.
@@ -486,6 +522,15 @@ def build_chain(spec: ScenarioSpec) -> ConceptChain:
                 ref = states[rho]
                 new = ConceptState(ref.w, ref.mu, ref.prior, ref.pi0, ref.concept_id)
                 geom = EventGeometry(idx, None, idx + 1, returns_to=rho)
+                if max(drift_components(state, new).values()) < ZERO_DRIFT:
+                    violations.append(
+                        Violation(
+                            "C7",
+                            f"возврат к концепту {rho} не меняет распределение: "
+                            "текущий концепт совпадает с ним по всем параметрам",
+                            f"events[{idx}].returns_to",
+                        )
+                    )
         else:
             new, geom, issues = _apply_event(idx, event, state, spec, next_id)
             next_id += 1

@@ -37,10 +37,12 @@ Pydantic-модели `StreamSpec` (B), `DriftEvent` ($e_k$) и `ScenarioSpec` (
 Модуль реализует утверждения 1–6 из п. 2.3:
 - $\Phi_2$ через T-функцию Оуэна (`scipy.special.owens_t`), точно до машинной точности;
 - калибровку угла поворота методом Брента;
-- сдвиг по расстоянию Хеллингера;
+- сдвиг заданной величины TV (утверждение 5);
 - правило prior-дрейфа.
 
-Функция `build_chain` вычисляет цепочку концептов $c_0 \to c_1 \to \dots \to c_K$ и разложение каждого перехода по трём компонентам единой шкалы, не порождая данных.
+Функция `build_chain` вычисляет цепочку концептов $c_0 \to c_1 \to \dots \to c_K$ и разложение каждого перехода по группам параметров, не порождая данных. Попутно она:
+- отклоняет возврат, не меняющий распределение (C7);
+- предупреждает о реальном дрейфе при $\pi_k \ne \pi_0$ (W3).
 ```writefile scendrift/scenario/semantics.py
 ```
 <!-- cell -->
@@ -105,7 +107,7 @@ print("Таксономия:", signature(demo))
 print(check(demo))
 ```
 <!-- cell -->
-Сценарий допустим. Предупреждение W2 напоминает, что событие 1 — виртуальный дрейф: детекторы, отслеживающие ошибку классификатора, не обязаны его замечать.
+Сценарий допустим. Предупреждение W2 напоминает, что второе событие (в таблицах $k = 1$, нумерация с нуля) — виртуальный дрейф: детекторы, отслеживающие ошибку классификатора, не обязаны его замечать.
 
 Цепочка концептов показывает фактическую величину каждого перехода по трём компонентам единой шкалы:
 - у обычных событий ненулевой будет только «своя» компонента, равная заданной величине;
@@ -114,7 +116,7 @@ print(check(demo))
 chain = sem.build_chain(demo)
 realized = pd.DataFrame([
     {"событие": k, "вид": g.kind.value if g.kind else f"возврат к c{g.returns_to}",
-     "|A|": len(g.affected), "φ, рад": round(g.rotation, 4), "δ": round(g.shift, 4),
+     "|A|": len(g.affected), "ψ, рад": round(g.rotation, 4), "δ": round(g.shift, 4),
      **{f"m_{name}": round(value, 6) for name, value in g.realized.items()}}
     for k, g in enumerate(chain.geometry)
 ])
@@ -126,40 +128,53 @@ assert chain.states[3].concept_id == chain.states[0].concept_id
 <!-- cell -->
 #### 4.1.10. Точность калибровки на случайных сценариях
 
-Проверим калибровку массово. Возьмём 2000 случайных одиночных событий: вид, доля класса, доля затронутых признаков и величина в пределах допустимой области. Затем сравним фактическую величину из цепочки концептов с заданной.
+Проверим калибровку массово на 2000 случайных событиях:
+- вид, доля класса, доля затронутых признаков и величина берутся в пределах допустимой области;
+- в половине случаев событию предшествует prior-дрейф, так что калибровка проверяется и при $\pi_k \ne \pi_0$.
+
+Затем сравним фактическую величину из цепочки концептов с заданной.
 ```python
 calib_rng = np.random.default_rng(GLOBAL_SEED)
 errors = []
 for i in range(2000):
     d_i = int(calib_rng.integers(4, 40))
-    kind = calib_rng.choice(["real", "virtual", "prior"])
+    kind = str(calib_rng.choice(["real", "virtual", "prior"]))
     pi0 = float(calib_rng.uniform(0.05, 0.5))
     alpha = float(calib_rng.uniform(2.5 / d_i, 1.0))
+    events = []
+    prior = pi0
+    if calib_rng.random() < 0.5:  # предшествующий prior-дрейф: π_k ≠ π₀
+        shift = float(calib_rng.uniform(0.05, 0.9 - pi0))
+        events.append({"position": 5_000, "kind": "prior", "magnitude": shift})
+        prior = pi0 + shift
     if kind == "real":
         k_aff = sem.affected_count(alpha, d_i)
-        upper = sem.max_real_severity(k_aff / d_i, pi0, pi0)
+        upper = sem.max_real_severity(k_aff / d_i, pi0, prior)
     elif kind == "virtual":
         upper = sem.MAX_VIRTUAL_MAGNITUDE
     else:
-        upper = 1 - 0.01 - pi0
+        upper = max(1 - 0.01 - prior, prior - 0.01)
     m = float(calib_rng.uniform(0.01, 1.0) * upper)
+    events.append({"position": 12_000, "kind": kind, "magnitude": m, "affected_share": alpha})
     spec_i = ScenarioSpec(
         stream=StreamSpec(n_features=d_i, minority_share=pi0, concept_seed=i),
-        events=({"position": 10_000, "kind": kind, "magnitude": m, "affected_share": alpha},),
+        events=tuple(events),
     )
-    g = sem.build_chain(spec_i).geometry[0]
-    errors.append({"вид": kind, "ошибка": abs(g.realized[kind] - m),
+    g = sem.build_chain(spec_i).geometry[-1]
+    errors.append({"вид": kind, "после prior": len(events) == 2,
+                   "ошибка": abs(g.realized[kind] - m),
                    "посторонние компоненты": sum(v for key, v in g.realized.items() if key != kind)})
 calib = pd.DataFrame(errors)
-summary = calib.groupby("вид").agg(событий=("ошибка", "size"), max_ошибка=("ошибка", "max"),
-                                   max_посторонние=("посторонние компоненты", "max"))
+summary = calib.groupby(["вид", "после prior"]).agg(
+    событий=("ошибка", "size"), max_ошибка=("ошибка", "max"),
+    max_посторонние=("посторонние компоненты", "max"))
 display(summary)
 assert calib["ошибка"].max() < 1e-8 and calib["посторонние компоненты"].max() < 1e-8
 ```
 <!-- cell -->
-Заданная величина воспроизводится с ошибкой порядка $10^{-10}$ и меньше, а «посторонние» компоненты равны нулю. Значит, каждый вид дрейфа действительно меняет только свою компоненту распределения.
+Заданная величина воспроизводится с ошибкой порядка машинной точности (~$10^{-14}$; порог проверки $10^{-8}$), а компоненты других групп параметров равны нулю. Значит, каждое событие меняет только свою группу параметров, и его величина равна TV совместных распределений (утверждение 1).
 
-Это свойство самой модели. На уровне порождённых данных его дополнительно проверит эксперимент Э1 (этап 2).
+Это свойство самой модели: тесты сверяют его с методом Монте-Карло, в том числе для реального дрейфа после prior-дрейфа. На уровне порождённых данных его проверит эксперимент Э1 (этап 2).
 <!-- cell -->
 #### 4.1.11. Демонстрация исправления недопустимого сценария
 
@@ -187,7 +202,7 @@ display(pd.DataFrame([{"k": k, "onset": e.onset, "end": e.end, "вид": e.kind.
 <!-- cell -->
 #### 4.1.12. Каталог ограничений и пространство параметров из кода
 
-Таблицы п. 2.4–2.5 строятся из кода. Проверим, что текст и код согласованы.
+Таблицы п. 2.4–2.5 вставляются в текст из кода при сборке ноутбука, поэтому расхождение исключено. Ячейка ниже выводит их напрямую и проверяет состав каталога ограничений.
 ```python
 from scendrift.scenario.report import CONSTRAINTS
 from scendrift.scenario.space import DEFAULT_SPACE
@@ -197,7 +212,7 @@ constraints_table = pd.DataFrame(
     columns=["код", "уровень", "ограничение"],
 )
 display(constraints_table)
-assert list(CONSTRAINTS) == [f"C{i}" for i in range(1, 14)] + ["W1", "W2"]
+assert list(CONSTRAINTS) == [f"C{i}" for i in range(1, 15)] + ["W1", "W2", "W3"]
 space_table = pd.DataFrame(DEFAULT_SPACE.table())
 display(space_table[["параметр", "обозначение", "часть", "домен", "по умолчанию", "активен, если"]])
 print("Варьируемые параметры:", DEFAULT_SPACE.free_names())

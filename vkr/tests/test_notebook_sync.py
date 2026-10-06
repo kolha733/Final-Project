@@ -46,3 +46,29 @@ def test_unknown_citation_key_fails() -> None:
     cells = builder.parse_source("Текст со ссылкой [@no_such_key].")
     with pytest.raises(KeyError):
         builder.number_citations(cells, builder.load_references())
+
+
+def test_long_fences_and_unclosed_blocks() -> None:
+    builder = _builder()
+    text = "Intro\n````markdown\n```python\nx = 1\n```\n````\nText\n```python\nprint('real')\n```"
+    cells = builder.parse_source(text)
+    assert [c.cell_type for c in cells] == ["markdown", "code"]
+    assert cells[1].source == "print('real')"
+    with pytest.raises(ValueError):
+        builder.parse_source("```yaml\na: 1\n")
+
+
+def test_tables_are_rendered_from_code() -> None:
+    builder = _builder()
+    constraints = builder.render_table("constraints")
+    assert "| C14 |" in constraints and "| W3 |" in constraints
+    assert "n_drifts ≥ 2" in builder.render_table("space")
+
+
+def test_gost_rendering_rules() -> None:
+    builder = _builder()
+    refs = builder.load_references()
+    assert refs["gama2014"]["gost"].startswith("A survey on concept drift adaptation / J. Gama")
+    assert refs["page1954"]["gost"].startswith("Page, E. S. Continuous inspection schemes")
+    assert refs["sobol1967"]["gost"].endswith("– Т. 7, № 4. – С. 784–802.")
+    assert "Текст : электронный" in refs["capymoa2025"]["gost"]

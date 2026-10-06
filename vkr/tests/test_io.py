@@ -82,3 +82,14 @@ def test_example_configs_load_and_validate(examples_dir: Path) -> None:
         spec = io.load(path)
         report = check(spec)
         assert report.ok, f"{path.name}: {report}"
+
+
+def test_id_ignores_irrelevant_event_fields() -> None:
+    a = io.from_dict({"events": [{"position": 9_000, "kind": "prior", "magnitude": 0.2}]})
+    b = io.from_dict(
+        {"events": [{"position": 9_000, "kind": "prior", "magnitude": 0.2, "affected_share": 0.3}]}
+    )
+    c = io.from_dict({"events": [{"position": 9_000, "magnitude": 0.2, "shape": "sigmoid"}]})
+    d = io.from_dict({"events": [{"position": 9_000, "magnitude": 0.2}]})
+    assert io.scenario_id(a) == io.scenario_id(b)
+    assert io.scenario_id(c) == io.scenario_id(d)
