@@ -1,0 +1,15 @@
+# Пример 2. Компактная форма: расписание + параметры по умолчанию.
+# Три постепенных реальных дрейфа на несбалансированном потоке с шумом меток.
+schema_version: "1.0"
+name: gradual_imbalanced_noisy
+tags: [example, gradual, imbalanced, noisy]
+stream:
+  n_samples: 30000
+  n_features: 20
+  minority_share: 0.2      # π: доля положительного класса
+  label_noise: 0.1         # η: эффективная величина m·(1 − 2η) = 0,12
+  concept_seed: 11
+drifts:
+  schedule: {mode: uniform, count: 3}
+  defaults: {form: gradual, kind: real, width: 2000, magnitude: 0.15, affected_share: 0.5}
+seed: 2

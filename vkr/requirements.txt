@@ -1,0 +1,18 @@
+# Точные версии, с которыми выполнены все эксперименты (Python 3.11).
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.6
+matplotlib==3.11.2
+pydantic==2.13.4
+PyYAML==6.0.1
+river==0.26.1
+joblib==1.6.0
+scikit-learn==1.9.1
+tabulate==0.10.0
+# Ноутбук и тесты
+nbformat==5.11.1
+nbclient==0.11.0
+nbconvert==7.17.1
+ipykernel==7.4.0
+pytest==9.1.1
+ruff==0.15.20

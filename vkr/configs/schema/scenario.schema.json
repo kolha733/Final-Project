@@ -1,0 +1,292 @@
+{
+  "$defs": {
+    "AdaptationPolicy": {
+      "description": "Реакция на срабатывание детектора.\n\n* ``RESET`` — базовая модель сбрасывается и обучается заново\n  (стандартная схема detect-and-reset).\n* ``NONE`` — модель продолжает обучаться, срабатывания только фиксируются.",
+      "enum": [
+        "reset",
+        "none"
+      ],
+      "title": "AdaptationPolicy",
+      "type": "string"
+    },
+    "DelayReference": {
+      "description": "Точка отсчёта задержки обнаружения.",
+      "enum": [
+        "onset",
+        "center"
+      ],
+      "title": "DelayReference",
+      "type": "string"
+    },
+    "DriftEvent": {
+      "additionalProperties": false,
+      "description": "Событие дрейфа e = (τ, w, φ, κ, m, α, ρ).\n\nИнтервал перехода — полуинтервал [onset, end), где\nonset = τ − ⌊w/2⌋ и end = onset + w. При внезапном дрейфе onset = end = τ,\nи объект с индексом τ — первый объект нового концепта.\n\nЕсли задано ``returns_to`` (ρ), событие считается *повторяющимся*: поток\nвозвращается к концепту с номером ρ. Концепт 0 — исходный, концепт k\nвозникает после k-го события. Вид и величина такого события не задаются,\nа вычисляются по разности концептов.",
+      "properties": {
+        "position": {
+          "description": "τ — центр интервала перехода (индекс объекта).",
+          "minimum": 0,
+          "title": "Position",
+          "type": "integer"
+        },
+        "width": {
+          "default": 0,
+          "description": "w — ширина перехода (в объектах).",
+          "minimum": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "form": {
+          "$ref": "#/$defs/DriftForm",
+          "default": "sudden",
+          "description": "φ — форма перехода."
+        },
+        "kind": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DriftKind"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "κ — вид дрейфа (None для повторяющегося)."
+        },
+        "magnitude": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "maximum": 1.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "m — величина дрейфа на единой шкале (0, 1].",
+          "title": "Magnitude"
+        },
+        "affected_share": {
+          "default": 1.0,
+          "description": "α — доля признаков, затронутых дрейфом.",
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Affected Share",
+          "type": "number"
+        },
+        "returns_to": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ρ — номер концепта, к которому возвращается поток.",
+          "title": "Returns To"
+        },
+        "shape": {
+          "$ref": "#/$defs/TransitionShape",
+          "default": "linear",
+          "description": "Профиль функции перехода p(t)."
+        }
+      },
+      "required": [
+        "position"
+      ],
+      "title": "DriftEvent",
+      "type": "object"
+    },
+    "DriftForm": {
+      "description": "Форма дрейфа во времени: как новый концепт замещает старый.\n\n* ``SUDDEN`` — внезапный дрейф (sudden/abrupt): мгновенная смена концепта, ширина 0.\n* ``GRADUAL`` — постепенный дрейф (gradual): на интервале перехода объекты\n  порождаются то старым, то новым концептом, причём вероятность нового растёт.\n* ``INCREMENTAL`` — инкрементальный дрейф (incremental): параметры концепта\n  непрерывно меняются, проходя через промежуточные концепты.",
+      "enum": [
+        "sudden",
+        "gradual",
+        "incremental"
+      ],
+      "title": "DriftForm",
+      "type": "string"
+    },
+    "DriftKind": {
+      "description": "Вид дрейфа: какая компонента совместного распределения P(X, y) меняется.\n\n* ``REAL`` — реальный дрейф (real drift): меняется P(y|X), а P(X) и P(y)\n  сохраняются.\n* ``VIRTUAL`` — виртуальный дрейф (virtual drift, covariate shift): меняется\n  P(X), а P(y|X) и P(y) сохраняются.\n* ``PRIOR`` — дрейф априорных вероятностей (prior/label shift): меняется P(y),\n  а P(X|y) сохраняется.",
+      "enum": [
+        "real",
+        "virtual",
+        "prior"
+      ],
+      "title": "DriftKind",
+      "type": "string"
+    },
+    "EvaluationSpec": {
+      "additionalProperties": false,
+      "description": "Протокол оценки Ω (часть сценария, учитывается в его идентификаторе).",
+      "properties": {
+        "base_model": {
+          "default": "gaussian_nb",
+          "description": "h — идентификатор базовой онлайн-модели в реестре моделей.",
+          "title": "Base Model",
+          "type": "string"
+        },
+        "on_detection": {
+          "$ref": "#/$defs/AdaptationPolicy",
+          "default": "reset",
+          "description": "a — политика адаптации при срабатывании."
+        },
+        "warmup": {
+          "default": 1000,
+          "description": "W — длина разогрева: дрейф не начинается раньше W.",
+          "minimum": 0,
+          "title": "Warmup",
+          "type": "integer"
+        },
+        "acceptance_window": {
+          "default": 2000,
+          "description": "Δ — окно допуска: обнаружение засчитывается на [onset, end + Δ).",
+          "minimum": 1,
+          "title": "Acceptance Window",
+          "type": "integer"
+        },
+        "delay_reference": {
+          "$ref": "#/$defs/DelayReference",
+          "default": "onset",
+          "description": "r — точка отсчёта задержки."
+        }
+      },
+      "title": "EvaluationSpec",
+      "type": "object"
+    },
+    "StreamSpec": {
+      "additionalProperties": false,
+      "description": "Базовая конфигурация потока B = (f, n, d, π, η, c).",
+      "properties": {
+        "family": {
+          "default": "hyperplane_gauss",
+          "description": "f — семейство генератора потока.",
+          "minLength": 1,
+          "title": "Family",
+          "type": "string"
+        },
+        "n_samples": {
+          "default": 20000,
+          "description": "n — длина потока.",
+          "maximum": 10000000,
+          "minimum": 1000,
+          "title": "N Samples",
+          "type": "integer"
+        },
+        "n_features": {
+          "default": 10,
+          "description": "d — число признаков.",
+          "maximum": 500,
+          "minimum": 2,
+          "title": "N Features",
+          "type": "integer"
+        },
+        "minority_share": {
+          "default": 0.5,
+          "description": "π — исходная доля положительного (миноритарного) класса P(y=1).",
+          "maximum": 0.5,
+          "minimum": 0.01,
+          "title": "Minority Share",
+          "type": "number"
+        },
+        "label_noise": {
+          "default": 0.0,
+          "description": "η — вероятность инверсии метки (шум меток).",
+          "exclusiveMaximum": 0.5,
+          "minimum": 0.0,
+          "title": "Label Noise",
+          "type": "number"
+        },
+        "concept_seed": {
+          "default": 0,
+          "description": "c — структурный seed: задаёт геометрию концептов (затронутые признаки, направления поворота и сдвига) и случайное расписание. От seed реализации не зависит, поэтому повторы сценария имеют одинаковые концепты.",
+          "minimum": 0,
+          "title": "Concept Seed",
+          "type": "integer"
+        },
+        "family_params": {
+          "additionalProperties": true,
+          "description": "Параметры, специфичные для семейства.",
+          "title": "Family Params",
+          "type": "object"
+        }
+      },
+      "title": "StreamSpec",
+      "type": "object"
+    },
+    "TransitionShape": {
+      "description": "Профиль функции перехода p(t) на интервале [onset, end).\n\n* ``LINEAR`` — линейный рост от 0 до 1.\n* ``SIGMOID`` — сигмоида как в MOA (ConceptDriftStream), отнормированная\n  так, что p(onset) = 0 и p(end) = 1 ровно на границах интервала.",
+      "enum": [
+        "linear",
+        "sigmoid"
+      ],
+      "title": "TransitionShape",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Сценарий концептуального дрейфа S = <B, E, Omega, s>, версия схемы 1.0",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "name": {
+      "default": "unnamed",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "description": {
+      "default": "",
+      "title": "Description",
+      "type": "string"
+    },
+    "tags": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    },
+    "stream": {
+      "$ref": "#/$defs/StreamSpec"
+    },
+    "events": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DriftEvent"
+      },
+      "title": "Events",
+      "type": "array"
+    },
+    "evaluation": {
+      "$ref": "#/$defs/EvaluationSpec"
+    },
+    "seed": {
+      "default": 0,
+      "description": "s — seed реализации (выборка X, y, шум).",
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "meta": {
+      "additionalProperties": true,
+      "description": "Происхождение сценария (в хэш не входит).",
+      "title": "Meta",
+      "type": "object"
+    }
+  },
+  "title": "scendrift ScenarioSpec",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

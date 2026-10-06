@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scendrift"
+version = "0.1.0"
+description = "Фреймворк генерации бенчмарков систем выявления концептуального дрейфа со сценариями"
+authors = [
+    { name = "Будаев Константин Владимирович" },
+    { name = "Гарифзянов Тимур Русланович" },
+]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "pandas>=2.2",
+    "matplotlib>=3.9",
+    "pydantic>=2.7",
+    "PyYAML>=6.0",
+    "river>=0.26",
+    "joblib>=1.4",
+    "scikit-learn>=1.5",
+]
+
+[tool.setuptools.packages.find]
+include = ["scendrift*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["notebook", "*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "D"]
+ignore = ["D102", "D105", "D107", "D401", "N802", "N803", "N806"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D", "N812"]
+"tools/*" = ["D"]
+
+[tool.ruff.format]
+quote-style = "double"

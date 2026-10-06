@@ -1,0 +1,203 @@
+# Список литературы ВКР: единый источник для ноутбука и пояснительной записки.
+# key — ключ цитирования [@key]; gost — запись по ГОСТ Р 7.0.100-2018;
+# status: ok — данные сверены с первоисточником/dblp, check — требует проверки [ПРОВЕРИТЬ].
+- key: gama2014
+  gost: 'Gama J., Žliobaitė I., Bifet A., Pechenizkiy M., Bouchachia A. A survey on concept drift adaptation // ACM Computing Surveys. 2014. Vol. 46, no. 4. Art. 44. P. 1–37. DOI: 10.1145/2523813.'
+  status: ok
+  source: https://raw.githubusercontent.com/davidar/dblp.yaml/master/journals/csur.bib
+- key: lu2019
+  gost: 'Lu J., Liu A., Dong F., Gu F., Gama J., Zhang G. Learning under concept drift: a review // IEEE Transactions on Knowledge and Data Engineering. 2019. Vol. 31, no. 12. P. 2346–2363. DOI: 10.1109/TKDE.2018.2876857.'
+  status: ok
+  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/69/2019.json
+- key: webb2016
+  gost: 'Webb G. I., Hyde R., Cao H., Nguyen H. L., Petitjean F. Characterizing concept drift // Data Mining and Knowledge Discovery. 2016. Vol. 30, no. 4. P. 964–994. DOI: 10.1007/s10618-015-0448-4.'
+  status: ok
+  source: https://github.com/fpetitjean/ConceptDriftGenerator
+- key: morenotorres2012
+  gost: 'Moreno-Torres J. G., Raeder T., Alaiz-Rodríguez R., Chawla N. V., Herrera F. A unifying view on dataset shift in classification // Pattern Recognition. 2012. Vol. 45, no. 1. P. 521–530. DOI: 10.1016/j.patcog.2011.06.019.'
+  status: ok
+  source: https://raw.githubusercontent.com/davidar/dblp.yaml/master/journals/pr.bib
+- key: minku2010
+  gost: 'Minku L. L., White A. P., Yao X. The impact of diversity on online ensemble learning in the presence of concept drift // IEEE Transactions on Knowledge and Data Engineering. 2010. Vol. 22, no. 5. P. 730–742. DOI: 10.1109/TKDE.2009.156.'
+  status: ok
+  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/69/2010.json
+- key: zliobaite2010
+  gost: 'Žliobaitė I. Learning under concept drift: an overview [Электронный ресурс] // arXiv. 2010. arXiv:1010.4784. URL: https://arxiv.org/abs/1010.4784 (дата обращения: 06.10.2026).'
+  status: ok
+  source: https://arxiv.org/abs/1010.4784
+- key: ddm2004
+  gost: 'Gama J., Medas P., Castillo G., Rodrigues P. Learning with drift detection // Advances in Artificial Intelligence – SBIA 2004 : 17th Brazilian Symposium on Artificial Intelligence, São Luis, Maranhão, Brazil, September 29 – October 1, 2004 : Proceedings. Berlin ; Heidelberg : Springer, 2004. P. 286–295. (Lecture Notes in Computer Science ; vol. 3171). DOI: 10.1007/978-3-540-28645-5_29.'
+  status: ok
+  source: https://raw.githubusercontent.com/davidar/dblp.yaml/master/conf/sbia.bib
+- key: eddm2006
+  gost: Baena-García M., del Campo-Ávila J., Fidalgo R., Bifet A., Gavaldà R., Morales-Bueno R. Early drift detection method // Fourth International Workshop on Knowledge Discovery from Data Streams (IWKDDS 2006), held with ECML PKDD 2006. Berlin, 2006. P. 77–86.
+  status: ok
+  source: https://github.com/online-ml/river/blob/main/river/drift/binary/eddm.py
+- key: adwin2007
+  gost: 'Bifet A., Gavaldà R. Learning from time-changing data with adaptive windowing // Proceedings of the 2007 SIAM International Conference on Data Mining (SDM 2007), Minneapolis, April 26–28, 2007. Philadelphia : SIAM, 2007. P. 443–448. DOI: 10.1137/1.9781611972771.42.'
+  status: ok
+  source: https://epubs.siam.org/doi/10.1137/1.9781611972771.42
+- key: kswin2020
+  gost: 'Raab C., Heusinger M., Schleif F.-M. Reactive soft prototype computing for concept drift streams // Neurocomputing. 2020. Vol. 416. P. 340–351. DOI: 10.1016/j.neucom.2019.11.111.'
+  status: ok
+  source: https://arxiv.org/abs/2007.05432
+- key: page1954
+  gost: 'Page E. S. Continuous inspection schemes // Biometrika. 1954. Vol. 41, no. 1/2. P. 100–115. DOI: 10.1093/biomet/41.1-2.100.'
+  status: ok
+  source: https://academic.oup.com/biomet/issue/41/1-2
+- key: hddm2015
+  gost: 'Frías-Blanco I., del Campo-Ávila J., Ramos-Jiménez G., Morales-Bueno R., Ortiz-Díaz A., Caballero-Mota Y. Online and non-parametric drift detection methods based on Hoeffding''s bounds // IEEE Transactions on Knowledge and Data Engineering. 2015. Vol. 27, no. 3. P. 810–823. DOI: 10.1109/TKDE.2014.2345382.'
+  status: ok
+  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/69/2015.json
+- key: fhddm2016
+  gost: 'Pesaranghader A., Viktor H. L. Fast Hoeffding drift detection method for evolving data streams // Machine Learning and Knowledge Discovery in Databases : European Conference, ECML PKDD 2016, Riva del Garda, Italy, September 19–23, 2016 : Proceedings, Part II. Cham : Springer, 2016. P. 96–111. (Lecture Notes in Computer Science ; vol. 9852). DOI: 10.1007/978-3-319-46227-1_7.'
+  status: ok
+  source: https://mlanthology.org/ecmlpkdd/2016/pesaranghader2016ecmlpkdd-fast
+- key: goemans1995
+  gost: 'Goemans M. X., Williamson D. P. Improved approximation algorithms for maximum cut and satisfiability problems using semidefinite programming // Journal of the ACM. 1995. Vol. 42, no. 6. P. 1115–1145. DOI: 10.1145/227683.227684.'
+  status: ok
+  source: https://raw.githubusercontent.com/davidar/dblp.yaml/master/journals/jacm.bib
+- key: ditzler2011
+  gost: 'Ditzler G., Polikar R. Hellinger distance based drift detection for nonstationary environments // 2011 IEEE Symposium on Computational Intelligence in Dynamic and Uncertain Environments (CIDUE), Paris, France, 11–15 April 2011. IEEE, 2011. P. 41–48. DOI: 10.1109/CIDUE.2011.5948491.'
+  status: ok
+  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/5936921/2011.json
+- key: iwashita2019
+  gost: 'Iwashita A. S., Papa J. P. An overview on concept drift learning // IEEE Access. 2019. Vol. 7. P. 1532–1547. DOI: 10.1109/ACCESS.2018.2886026.'
+  status: ok
+  source: https://raw.githubusercontent.com/SJTU-YONGFU-RESEARCH-GRP/CIRDC/main/CIRDC/6287639/2019.json
+- key: krawczyk2017
+  gost: 'Krawczyk B., Minku L. L., Gama J., Stefanowski J., Woźniak M. Ensemble learning for data stream analysis: a survey // Information Fusion. 2017. Vol. 37. P. 132–156. DOI: 10.1016/j.inffus.2017.02.004.'
+  status: ok
+  source: https://www.sciencedirect.com/science/article/pii/S1566253516302329
+- key: hinder2024
+  gost: 'Hinder F., Vaquet V., Hammer B. One or two things we know about concept drift — a survey on monitoring in evolving environments. Part A: detecting concept drift // Frontiers in Artificial Intelligence. 2024. Vol. 7. Art. 1330257. DOI: 10.3389/frai.2024.1330257.'
+  status: ok
+  source: https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2024.1330257/full
+- key: hulten2001
+  gost: 'Hulten G., Spencer L., Domingos P. Mining time-changing data streams // Proceedings of the Seventh ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD ''01), San Francisco, California, 2001. New York : ACM, 2001. P. 97–106. DOI: 10.1145/502512.502529.'
+  status: ok
+  source: https://raw.githubusercontent.com/boudinfl/acm-cr/master/data/acm-dl/kdd/kdd-2001.bib
+- key: moabook2018
+  gost: 'Bifet A., Gavaldà R., Holmes G., Pfahringer B. Machine learning for data streams: with practical examples in MOA. Cambridge, MA : MIT Press, 2018. 288 p. (Adaptive Computation and Machine Learning). ISBN 978-0-262-03779-2. DOI: 10.7551/mitpress/10654.001.0001.'
+  status: ok
+  source: https://direct.mit.edu/books/oa-monograph/4475/Machine-Learning-for-Data-Streamswith-Practical
+- key: moa2010
+  gost: 'Bifet A., Holmes G., Kirkby R., Pfahringer B. MOA: Massive Online Analysis // Journal of Machine Learning Research. 2010. Vol. 11. P. 1601–1604.'
+  status: ok
+  source: https://www.jmlr.org/papers/v11/bifet10a.html
+- key: skmultiflow2018
+  gost: 'Montiel J., Read J., Bifet A., Abdessalem T. Scikit-Multiflow: A Multi-output Streaming Framework // Journal of Machine Learning Research. 2018. Vol. 19, no. 72. P. 1–5.'
+  status: ok
+  source: https://github.com/scikit-multiflow/scikit-multiflow
+- key: river2021
+  gost: 'Montiel J., Halford M., Mastelini S. M., Bolmier G., Sourty R., Vaysse R., Zouitine A., Gomes H. M., Read J., Abdessalem T., Bifet A. River: machine learning for streaming data in Python // Journal of Machine Learning Research. 2021. Vol. 22, no. 110. P. 1–8.'
+  status: ok
+  source: https://www.jmlr.org/papers/v22/20-1380.html
+- key: cdmoa2013
+  gost: 'Bifet A., Read J., Pfahringer B., Holmes G., Žliobaitė I. CD-MOA: Change Detection Framework for Massive Online Analysis // Advances in Intelligent Data Analysis XII : 12th International Symposium, IDA 2013, London, UK, October 17–19, 2013 : Proceedings / eds. A. Tucker, F. Höppner, A. Siebes, S. Swift. Berlin ; Heidelberg : Springer, 2013. P. 92–103. (Lecture Notes in Computer Science ; vol. 8207). DOI: 10.1007/978-3-642-41398-8_9.'
+  status: ok
+  source: https://link.springer.com/chapter/10.1007/978-3-642-41398-8_9
+- key: barros2018
+  gost: 'Barros R. S. M., Santos S. G. T. C. A large-scale comparison of concept drift detectors // Information Sciences. 2018. Vol. 451–452. P. 348–370. DOI: 10.1016/j.ins.2018.04.014.'
+  status: ok
+  source: https://doi.org/10.1016/j.ins.2018.04.014
+- key: goncalves2014
+  gost: 'Gonçalves P. M. Jr., de Carvalho Santos S. G. T., Barros R. S. M., Vieira D. C. L. A comparative study on concept drift detectors // Expert Systems with Applications. 2014. Vol. 41, no. 18. P. 8144–8156. DOI: 10.1016/j.eswa.2014.07.019.'
+  status: ok
+  source: https://doi.org/10.1016/j.eswa.2014.07.019
+- key: bifet2017
+  gost: 'Bifet A. Classifier Concept Drift Detection and the Illusion of Progress // Artificial Intelligence and Soft Computing : 16th International Conference, ICAISC 2017, Zakopane, Poland, June 11–15, 2017 : Proceedings. Part II / eds. L. Rutkowski, M. Korytkowski, R. Scherer [et al.]. Cham : Springer, 2017. P. 715–725. (Lecture Notes in Computer Science ; vol. 10246). DOI: 10.1007/978-3-319-59060-8_64.'
+  status: ok
+  source: https://link.springer.com/chapter/10.1007/978-3-319-59060-8_64
+- key: gama2013
+  gost: 'Gama J., Sebastião R., Rodrigues P. P. On evaluating stream learning algorithms // Machine Learning. 2013. Vol. 90, no. 3. P. 317–346. DOI: 10.1007/s10994-012-5320-9.'
+  status: ok
+  source: https://doi.org/10.1007/s10994-012-5320-9
+- key: souza2020
+  gost: 'Souza V. M. A., dos Reis D. M., Maletzke A. G., Batista G. E. A. P. A. Challenges in benchmarking stream learning algorithms with real-world data // Data Mining and Knowledge Discovery. 2020. Vol. 34, no. 6. P. 1805–1858. DOI: 10.1007/s10618-020-00698-5.'
+  status: ok
+  source: https://doi.org/10.1007/s10618-020-00698-5
+- key: streamlearn2022
+  gost: 'Ksieniewicz P., Zyblewski P. stream-learn — open-source Python library for difficult data stream batch analysis // Neurocomputing. 2022. Vol. 478. P. 11–21. DOI: 10.1016/j.neucom.2021.10.120.'
+  status: ok
+  source: https://github.com/w4k2/stream-learn
+- key: frouros2024
+  gost: 'Céspedes Sisniega J., López García Á. Frouros: An open-source Python library for drift detection in machine learning systems // SoftwareX. 2024. Vol. 26. Art. 101733. DOI: 10.1016/j.softx.2024.101733.'
+  status: ok
+  source: https://github.com/IFCA-Advanced-Computing/frouros
+- key: sea2001
+  gost: 'Street W. N., Kim Y. A streaming ensemble algorithm (SEA) for large-scale classification // KDD ''01 : Proceedings of the Seventh ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, San Francisco, August 26–29, 2001. New York : ACM, 2001. P. 377–382. DOI: 10.1145/502512.502568.'
+  status: ok
+  source: https://dl.acm.org/doi/10.1145/502512.502568
+- key: agrawal1993
+  gost: 'Agrawal R., Imielinski T., Swami A. Database mining: A performance perspective // IEEE Transactions on Knowledge and Data Engineering. 1993. Vol. 5, no. 6. P. 914–925. DOI: 10.1109/69.250074.'
+  status: ok
+  source: https://doi.org/10.1109/69.250074
+- key: stagger1986
+  gost: 'Schlimmer J. C., Granger R. H. Jr. Incremental learning from noisy data // Machine Learning. 1986. Vol. 1, no. 3. P. 317–354. DOI: 10.1007/BF00116895.'
+  status: ok
+  source: https://link.springer.com/article/10.1007/BF00116895
+- key: harries1999
+  gost: 'Harries M. Splice-2 comparative evaluation: Electricity pricing : technical report. Sydney : The University of New South Wales, 1999.'
+  status: ok
+  source: https://github.com/Waikato/moa/blob/master/moa/src/main/latex/StreamMining/StreamMining.bib
+- key: demsar2006
+  gost: Demšar J. Statistical Comparisons of Classifiers over Multiple Data Sets // Journal of Machine Learning Research. 2006. Vol. 7. P. 1–30.
+  status: ok
+  source: https://www.jmlr.org/papers/v7/demsar06a.html
+- key: friedman1937
+  gost: 'Friedman M. The Use of Ranks to Avoid the Assumption of Normality Implicit in the Analysis of Variance // Journal of the American Statistical Association. 1937. Vol. 32, no. 200. P. 675–701. DOI: 10.1080/01621459.1937.10503522.'
+  status: ok
+  source: https://doi.org/10.1080/01621459.1937.10503522
+- key: nemenyi1963
+  gost: 'Nemenyi P. B. Distribution-free multiple comparisons : PhD thesis. Princeton : Princeton University, 1963.'
+  status: ok
+  source: https://mathgenealogy.org/id.php?id=29470
+- key: wilcoxon1945
+  gost: 'Wilcoxon F. Individual Comparisons by Ranking Methods // Biometrics Bulletin. 1945. Vol. 1, no. 6. P. 80–83. DOI: 10.2307/3001968.'
+  status: ok
+  source: https://doi.org/10.2307/3001968
+- key: holm1979
+  gost: Holm S. A Simple Sequentially Rejective Multiple Test Procedure // Scandinavian Journal of Statistics. 1979. Vol. 6, no. 2. P. 65–70.
+  status: ok
+  source: https://www.jstor.org/stable/4615733
+- key: lhs1979
+  gost: 'McKay M. D., Beckman R. J., Conover W. J. A Comparison of Three Methods for Selecting Values of Input Variables in the Analysis of Output from a Computer Code // Technometrics. 1979. Vol. 21, no. 2. P. 239–245. DOI: 10.1080/00401706.1979.10489755.'
+  status: ok
+  source: https://doi.org/10.1080/00401706.1979.10489755
+- key: sobol1967
+  gost: Соболь И. М. О распределении точек в кубе и приближенном вычислении интегралов // Журнал вычислительной математики и математической физики. 1967. Т. 7, № 4. С. 784–802.
+  status: ok
+  source: https://www.mathnet.ru/rus/zvmmf7334
+- key: scipy2020
+  gost: 'Virtanen P., Gommers R., Oliphant T. E. [et al.] SciPy 1.0: fundamental algorithms for scientific computing in Python // Nature Methods. 2020. Vol. 17, no. 3. P. 261–272. DOI: 10.1038/s41592-019-0686-2.'
+  status: ok
+  source: https://github.com/scipy/scipy/blob/main/CITATION.bib
+- key: sklearn2011
+  gost: 'Pedregosa F., Varoquaux G., Gramfort A. [et al.] Scikit-learn: Machine Learning in Python // Journal of Machine Learning Research. 2011. Vol. 12. P. 2825–2830.'
+  status: ok
+  source: https://jmlr.org/papers/v12/pedregosa11a.html
+- key: kendall1938
+  gost: 'Kendall M. G. A New Measure of Rank Correlation // Biometrika. 1938. Vol. 30, no. 1/2. P. 81–93. DOI: 10.1093/biomet/30.1-2.81.'
+  status: ok
+  source: https://doi.org/10.1093/biomet/30.1-2.81
+- key: lukats2025
+  gost: 'Lukats D., Zielinski O., Hahn A., Stahl F. A benchmark and survey of fully unsupervised concept drift detectors on real-world data streams // International Journal of Data Science and Analytics. 2025. Vol. 19, no. 1. P. 1–31. DOI: 10.1007/s41060-024-00620-y.'
+  status: ok
+  source: https://link.springer.com/article/10.1007/s41060-024-00620-y
+- key: gost732
+  gost: 'ГОСТ 7.32–2017. Система стандартов по информации, библиотечному и издательскому делу. Отчет о научно-исследовательской работе. Структура и правила оформления : межгосударственный стандарт : издание официальное : введен в действие в качестве национального стандарта Российской Федерации Приказом Федерального агентства по техническому регулированию и метрологии от 24 октября 2017 г. № 1494-ст : взамен ГОСТ 7.32–2001 : дата введения 2018-07-01. Москва : Стандартинформ, 2017.'
+  status: ok
+  source: Стандартинформ
+- key: gost70100
+  gost: 'ГОСТ Р 7.0.100–2018. Система стандартов по информации, библиотечному и издательскому делу. Библиографическая запись. Библиографическое описание. Общие требования и правила составления : национальный стандарт Российской Федерации : издание официальное : утвержден и введен в действие Приказом Федерального агентства по техническому регулированию и метрологии от 3 декабря 2018 г. № 1050-ст : дата введения 2019-07-01. Москва : Стандартинформ, 2018.'
+  status: ok
+  source: Стандартинформ
+- key: plackett1954
+  gost: Plackett R. L. A reduction formula for normal multivariate integrals // Biometrika. 1954. Vol. 41, no. 3/4. P. 351–360.
+  status: check
+  source: ''
+- key: owen1956
+  gost: Owen D. B. Tables for computing bivariate normal probabilities // The Annals of Mathematical Statistics. 1956. Vol. 27, no. 4. P. 1075–1090.
+  status: check
+  source: ''

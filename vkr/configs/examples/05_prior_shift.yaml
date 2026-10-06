@@ -1,0 +1,12 @@
+# Пример 5. Дрейф априорных вероятностей (label shift): P(y) меняется, P(X|y) сохраняется.
+schema_version: "1.0"
+name: prior_shift_two_steps
+tags: [example, prior]
+stream:
+  n_samples: 20000
+  n_features: 5
+  minority_share: 0.3
+drifts:
+  schedule: {mode: explicit, count: 2, positions: [7000, 14000]}
+  defaults: {form: sudden, kind: prior, magnitude: 0.2}
+seed: 4

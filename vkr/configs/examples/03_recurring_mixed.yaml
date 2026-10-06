@@ -1,0 +1,18 @@
+# Пример 3. Смешанный сценарий с возвратом: real → virtual → возврат к исходному концепту.
+# Третий дрейф (returns_to: 0) отменяет и поворот, и сдвиг: вид и величина вычисляются.
+schema_version: "1.0"
+name: recurring_mixed
+tags: [example, recurring, mixed]
+stream:
+  n_samples: 20000
+  n_features: 10
+  minority_share: 0.3
+  label_noise: 0.05
+  concept_seed: 7
+drifts:
+  schedule: {mode: uniform, count: 3}
+  defaults: {form: gradual, kind: real, width: 1000, magnitude: 0.2, affected_share: 0.5}
+  overrides:
+    - {index: 1, kind: virtual, magnitude: 0.4}
+    - {index: 2, returns_to: 0}
+seed: 42
