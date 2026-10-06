@@ -195,9 +195,9 @@
   source: Стандартинформ
 - key: plackett1954
   gost: Plackett R. L. A reduction formula for normal multivariate integrals // Biometrika. 1954. Vol. 41, no. 3/4. P. 351–360.
-  status: check
-  source: ''
+  status: ok
+  source: https://academic.oup.com/biomet/issue/41/3-4
 - key: owen1956
   gost: Owen D. B. Tables for computing bivariate normal probabilities // The Annals of Mathematical Statistics. 1956. Vol. 27, no. 4. P. 1075–1090.
-  status: check
-  source: ''
+  status: ok
+  source: https://portal.mardi4nfdi.de/wiki/Tables_for_Computing_Bivariate_Normal_Probabilities
