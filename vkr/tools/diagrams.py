@@ -153,7 +153,7 @@ def component_diagram(path: Path) -> Path:
             "schema: ScenarioSpec = ⟨B, E, Ω, s⟩",
             "semantics: цепочка концептов,",
             "   калибровка величины m (TV)",
-            "validation: C1–C14, W1–W3, repair",
+            "validation: C1–C14, W1–W4, repair",
             "io: канонический JSON, id, схема",
             "space, taxonomy",
         ],
@@ -442,7 +442,7 @@ def class_diagram(path: Path) -> Path:
             "generate(S, seed) → StreamData",
             "",
             "StreamData: X, y, y_clean,",
-            "concept, ground_truth",
+            "concept, progress, ground_truth",
         ],
         who="K",
     )

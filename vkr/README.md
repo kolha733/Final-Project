@@ -43,6 +43,15 @@ for g in semantics.build_chain(spec).geometry:
     print(g.index, g.kind, g.realized)
 ```
 
+Порождение потока по сценарию (любое зарегистрированное семейство: `hyperplane_gauss`, `river:*`, `real:*`):
+
+```python
+from scendrift.generators import generate
+
+data = generate(spec, seed=1)           # X, y, y_clean, concept, progress
+print(data.X.shape, data.ground_truth.to_records()[0])
+```
+
 ## Как править
 
 - **Код** правится в `scendrift/*.py`.
@@ -53,4 +62,4 @@ for g in semantics.build_chain(spec).geometry:
 ## Режимы запуска
 
 - `SCENDRIFT_MODE=FAST` (по умолчанию) — сокращённые эксперименты, минуты на ноутбуке.
-- `SCENDRIFT_MODE=FULL` — полный эксперимент для сервера или Colab Pro (этап 5).
+- `SCENDRIFT_MODE=FULL` — полный эксперимент для сервера или Colab Pro: больше seed и сценариев в Э1, полный объём Э2–Э8 (этап 5).

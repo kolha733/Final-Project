@@ -127,10 +127,14 @@ class StreamData:
         X: матрица признаков n × d.
         y: метки (с шумом), n.
         ground_truth: истинная разметка дрейфа.
-        concept: номер концепта, породившего объект (латентная переменная), n.
+        concept: номер состояния цепочки концептов, породившего объект
+            (латентная переменная), n. При инкрементальном переходе —
+            номер конечного состояния перехода.
         y_clean: метки без шума (для валидации генератора), n.
         scenario_id: идентификатор сценария.
         seed: seed реализации.
+        progress: значение функции перехода p(t) для текущего события, n.
+        feature_names: имена признаков.
     """
 
     X: np.ndarray
@@ -140,6 +144,8 @@ class StreamData:
     y_clean: np.ndarray
     scenario_id: str
     seed: int
+    progress: np.ndarray | None = None
+    feature_names: tuple[str, ...] = ()
 
     @property
     def n_samples(self) -> int:

@@ -6,7 +6,7 @@
 |---|---|---|
 | `scendrift/scenario/enums.py`, `schema.py`, `report.py` | Будаев К. В. | 1 |
 | `scendrift/scenario/semantics.py` (калибровка величины, цепочка концептов) | Будаев К. В. | 1 |
-| `scendrift/scenario/validation.py`, `families.py` (ограничения C1–C13, repair) | Будаев К. В. | 1 |
+| `scendrift/scenario/validation.py`, `families.py` (ограничения C1–C14, предупреждения W1–W4, repair) | Будаев К. В. | 1–2 |
 | `scendrift/scenario/space.py`, `taxonomy.py`, `io.py` | Будаев К. В. | 1 |
 | `scendrift/evaluation/protocol.py` (протокол оценки Ω) | Гарифзянов Т. Р. | 1 |
 | `scendrift/reporting/style.py` (единый стиль графиков) | Гарифзянов Т. Р. | 1 |
@@ -15,11 +15,17 @@
 | Ноутбук: разд. 1.1–1.2, 2.1–2.5 | Будаев К. В. | 1 |
 | Ноутбук: разд. 1.3–1.4 (обзор детекторов и аналогов), 2.6 | Гарифзянов Т. Р. | 1 |
 | Ноутбук: разд. 0, 1.5, 3, 6, 7 | совместно | 1 |
-| `scendrift/generators/` | Будаев К. В. | 2 |
+| `scendrift/generators/transitions.py`, `base.py`, `ground_truth.py` (функции перехода, конвейер генерации, ground truth) | Будаев К. В. | 2 |
+| `scendrift/generators/hyperplane.py` (калиброванное семейство) | Будаев К. В. | 2 |
+| `scendrift/generators/classic.py` (обёртка генераторов river, вычисление TV смены концепта) | Будаев К. В. | 2 |
+| `scendrift/generators/real.py` (внедрение дрейфа в реальные данные с точной калибровкой) | Будаев К. В. | 2 |
+| `scendrift/generators/diagnostics.py`, `tests/test_generators.py` | Будаев К. В. | 2 |
+| Ноутбук: разд. 4.1–4.5, 5.1 (Э1) | Будаев К. В. | 1–2 |
 | `scendrift/formation/` | Будаев К. В. | 3 |
 | `scendrift/detectors/`, `scendrift/evaluation/` (раннер, метрики, статистика), `scendrift/reporting/` | Гарифзянов Т. Р. | 4 |
-| Эксперименты Э1, Э7 | Будаев К. В. | 5 |
+| Эксперимент Э1 | Будаев К. В. | 2 |
+| Эксперимент Э7 | Будаев К. В. | 5 |
 | Эксперименты Э2, Э3, Э5, Э6, Э8 | Гарифзянов Т. Р. | 5 |
 | Эксперимент Э4 | совместно | 5 |
 
-Заимствованные компоненты (не являются вкладом авторов): детекторы, базовая модель и классические генераторы — river 0.26.1; планы LHS/Sobol, статистические тесты, T-функция Оуэна — SciPy; валидация схемы — pydantic.
+Заимствованные компоненты (не являются вкладом авторов): детекторы, базовая модель, классические генераторы (SEA, Agrawal, STAGGER, Sine, Mixed) и наборы данных Bananas и Phishing — river 0.26.1; планы LHS/Sobol, статистические тесты, T-функция Оуэна — SciPy; валидация схемы — pydantic.

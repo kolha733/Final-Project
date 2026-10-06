@@ -32,7 +32,6 @@ def test_event_defaults_and_interval() -> None:
         ({"position": 100, "width": 10, "magnitude": 0.1}, "C1"),  # sudden с шириной
         ({"position": 100, "form": "gradual", "width": 1, "magnitude": 0.1}, "C1"),
         ({"position": 10, "form": "gradual", "width": 100, "magnitude": 0.1}, "C1"),
-        ({"position": 100}, "C2"),  # нет величины
         ({"position": 100, "returns_to": 0, "magnitude": 0.1}, "C3"),
         ({"position": 100, "returns_to": 0, "kind": "real"}, "C3"),
     ],
@@ -56,6 +55,17 @@ def test_event_local_constraints(kwargs: dict, code: str) -> None:
 def test_event_domains(kwargs: dict) -> None:
     with pytest.raises(pydantic.ValidationError):
         DriftEvent(**kwargs)
+
+
+def test_magnitude_is_checked_by_family() -> None:
+    # величина не обязательна на уровне события: её требует калиброванное семейство (C2)
+    from scendrift.scenario import io
+    from scendrift.scenario.validation import check
+
+    e = DriftEvent(position=5_000)
+    assert e.magnitude is None and e.kind is DriftKind.REAL
+    spec = io.from_dict({"events": [{"position": 9_000}]})
+    assert "C2" in check(spec).codes()
 
 
 def test_recurring_event_has_no_kind() -> None:

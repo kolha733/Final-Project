@@ -112,7 +112,7 @@ def _check_timeline(spec: ScenarioSpec) -> list[Violation]:
 
 
 def _check_support(spec: ScenarioSpec) -> list[Violation]:
-    """C8, C13: семейство зарегистрировано и поддерживает события."""
+    """C2, C8, C13: семейство зарегистрировано и поддерживает события."""
     fam = get_family(spec.stream.family)
     if fam is None:
         return [
@@ -131,6 +131,22 @@ def _check_support(spec: ScenarioSpec) -> list[Violation]:
             out.append(Violation("C8", f"вид {event.kind} не поддерживается", f"{path}.kind"))
         if event.form not in fam.forms:
             out.append(Violation("C8", f"форма {event.form} не поддерживается", f"{path}.form"))
+        if event.returns_to is None:
+            if fam.calibrated and event.magnitude is None:
+                out.append(
+                    Violation(
+                        "C2", "для калиброванного семейства нужна величина m", f"{path}.magnitude"
+                    )
+                )
+            if not fam.calibrated and event.magnitude is not None:
+                out.append(
+                    Violation(
+                        "C2",
+                        f"семейство {fam.name!r} не калибровано: величина оценивается по данным, "
+                        "задавать m нельзя",
+                        f"{path}.magnitude",
+                    )
+                )
     unknown = sorted(set(spec.stream.family_params) - fam.params)
     if unknown:
         out.append(

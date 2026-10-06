@@ -3,10 +3,10 @@
 Ответственный: Будаев К. В.
 
 Семейство объявляет, какие виды и формы дрейфа оно поддерживает, и даёт
-функцию проверки ограничений, специфичных для семейства. На этапе 1
+функцию проверки ограничений, специфичных для семейства. Здесь
 регистрируется собственное калиброванное семейство ``hyperplane_gauss``.
-На этапе 2 добавляются обёртки классических генераторов river
-(``river:*``) и внедрение дрейфа в реальные данные (``real:*``).
+Обёртки классических генераторов river (``river:*``) и внедрение дрейфа в
+реальные данные (``real:*``) регистрируются модулем :mod:`scendrift.generators`.
 """
 
 from __future__ import annotations
@@ -63,8 +63,20 @@ def register_family(info: FamilyInfo, *, overwrite: bool = False) -> None:
 
 
 def get_family(name: str) -> FamilyInfo | None:
-    """Возвращает описание семейства или None, если оно не зарегистрировано."""
+    """Возвращает описание семейства или None, если оно не зарегистрировано.
+
+    Семейства ``river:*`` и ``real:*`` регистрируются модулем
+    :mod:`scendrift.generators`; при первом обращении он загружается сам.
+    """
+    if name not in _REGISTRY:
+        _load_builtin()
     return _REGISTRY.get(name)
+
+
+def _load_builtin() -> None:
+    import importlib
+
+    importlib.import_module("scendrift.generators")
 
 
 def registered_families() -> list[str]:

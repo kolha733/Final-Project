@@ -212,7 +212,7 @@ constraints_table = pd.DataFrame(
     columns=["код", "уровень", "ограничение"],
 )
 display(constraints_table)
-assert list(CONSTRAINTS) == [f"C{i}" for i in range(1, 15)] + ["W1", "W2", "W3"]
+assert list(CONSTRAINTS) == [f"C{i}" for i in range(1, 15)] + ["W1", "W2", "W3", "W4"]
 space_table = pd.DataFrame(DEFAULT_SPACE.table())
 display(space_table[["параметр", "обозначение", "часть", "домен", "по умолчанию", "активен, если"]])
 print("Варьируемые параметры:", DEFAULT_SPACE.free_names())

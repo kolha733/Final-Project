@@ -43,7 +43,8 @@ class ScenarioClass:
         forms: формы переходов (отсортированы).
         kinds: виды обычных событий (отсортированы).
         recurring: есть ли возврат к прежнему концепту.
-        severity: класс наибольшей заданной величины: none/low/medium/high.
+        severity: класс наибольшей заданной величины: low/medium/high; none — нет
+            событий; n/a — величины не заданы (некалиброванное семейство или только возвраты).
         speed: abrupt (все ℓ = 0), fast или slow (по наибольшей ширине).
         scope: global (α = 1 у всех событий real/virtual), partial или n/a (их нет).
         balance: balanced или imbalanced.
@@ -65,9 +66,9 @@ class ScenarioClass:
         return asdict(self)
 
 
-def _severity_class(m: float | None) -> str:
+def _severity_class(m: float | None, has_events: bool) -> str:
     if m is None:
-        return "none"
+        return "n/a" if has_events else "none"
     low, high = SEVERITY_BINS
     return "low" if m < low else ("medium" if m < high else "high")
 
@@ -97,7 +98,7 @@ def classify(spec: ScenarioSpec) -> ScenarioClass:
         forms=tuple(sorted({e.form.value for e in events})),
         kinds=tuple(sorted({e.kind.value for e in regular})),  # type: ignore[union-attr]
         recurring=any(e.returns_to is not None for e in events),
-        severity=_severity_class(max(magnitudes) if magnitudes else None),
+        severity=_severity_class(max(magnitudes) if magnitudes else None, bool(events)),
         speed=speed,
         scope=_scope(regular),
         balance="balanced" if spec.stream.minority_share >= BALANCED_SHARE else "imbalanced",
