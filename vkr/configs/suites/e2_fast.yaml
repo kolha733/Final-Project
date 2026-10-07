@@ -1,0 +1,9 @@
+# Набор сценариев основного бенчмарка Э2, режим FAST.
+# Формируется автоматически: build_suite(SuiteConfig) — п. 4.6.6.
+name: e2_fast
+version: 1.0.0
+description: Основной бенчмарк Э2 (FAST) — план Соболя по 11 параметрам пространства по умолчанию
+template:
+  extends: catalog/base
+design: {method: sobol, n: 64, seed: 2027}
+constraints: adapt

@@ -15,6 +15,7 @@
 | `scendrift/` | пакет фреймворка (источник истины для кода) |
 | `notebook/*.md` | тексты разделов ноутбука; `references.yaml` — единый список литературы |
 | `configs/examples/` | примеры сценариев (YAML) |
+| `configs/suites/` | конфигурации наборов сценариев |
 | `configs/schema/scenario.schema.json` | JSON Schema сценария (генерируется из pydantic) |
 | `tests/` | тесты pytest |
 | `tools/` | сборка ноутбука, схемы архитектуры, оформление литературы по ГОСТ |
@@ -50,6 +51,25 @@ from scendrift.generators import generate
 
 data = generate(spec, seed=1)           # X, y, y_clean, concept, progress
 print(data.X.shape, data.ground_truth.to_records()[0])
+```
+
+Автоматическое формирование набора сценариев по конфигурации и проверка целостности:
+
+```python
+import yaml
+from scendrift.formation import SuiteConfig, build_suite, load_suite
+
+config = SuiteConfig.model_validate(yaml.safe_load(open("configs/suites/e2_fast.yaml")))
+suite = build_suite(config)                 # план Соболя → сценарии → условные домены
+suite.save("results/suites/e2_fast")        # manifest.yaml + scenarios/*.yaml
+assert load_suite("results/suites/e2_fast").suite_id == suite.suite_id
+```
+
+Сценарий может наследовать профиль каталога или собираться из блоков:
+
+```yaml
+extends: catalog/medium                     # easy / medium / hard — точки шкалы сложности λ
+drifts: {defaults: {magnitude: 0.3}}
 ```
 
 ## Как править

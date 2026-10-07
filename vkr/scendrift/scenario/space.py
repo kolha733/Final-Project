@@ -7,7 +7,9 @@
 (отображение реализуется на этапе 3 в :mod:`scendrift.formation`).
 Модуль отвечает за домены и их отображение из единичного куба [0, 1)ᴰ:
 это общая основа для перебора по сетке, случайной выборки,
-латинского гиперкуба (LHS) и последовательностей Соболя.
+латинского гиперкуба (LHS) и последовательностей Соболя. Обратное
+отображение ``to_unit`` нужно, чтобы оценивать равномерность уже
+сформированного набора (после исправления сценариев).
 
 Некоторые параметры условные. Например, ширина перехода ℓ имеет смысл
 только при φ ∈ {gradual, incremental}. Неактивный параметр получает
@@ -24,6 +26,7 @@ from dataclasses import dataclass, replace
 from typing import Any
 
 __all__ = [
+    "space_id",
     "FloatDomain",
     "IntDomain",
     "Categorical",
@@ -82,6 +85,13 @@ class FloatDomain:
             return math.exp(a + u * (b - a))
         return self.low + u * (self.high - self.low)
 
+    def to_unit(self, value: float) -> float:
+        """Обратное отображение: значение → координата u ∈ [0, 1]."""
+        if self.log:
+            a, b = math.log(self.low), math.log(self.high)
+            return (math.log(float(value)) - a) / (b - a)
+        return (float(value) - self.low) / (self.high - self.low)
+
     def contains(self, value: Any) -> bool:
         return _is_real(value) and self.low <= float(value) <= self.high
 
@@ -119,6 +129,17 @@ class IntDomain:
             value = math.floor(self.low + u * (self.high - self.low + 1))
         return int(min(self.high, max(self.low, value)))
 
+    def to_unit(self, value: int) -> float:
+        """Обратное отображение: середина ячейки значения в [0, 1)."""
+        v = int(value)
+        if self.log:
+            a, b = math.log(self.low), math.log(self.high + 1)
+            lo, hi = (math.log(v) - a) / (b - a), (math.log(v + 1) - a) / (b - a)
+        else:
+            width = self.high - self.low + 1
+            lo, hi = (v - self.low) / width, (v - self.low + 1) / width
+        return (lo + hi) / 2.0
+
     def contains(self, value: Any) -> bool:
         return _is_int(value) and self.low <= int(value) <= self.high
 
@@ -151,6 +172,10 @@ class Categorical:
     def from_unit(self, u: float) -> Any:
         """Отображение u ∈ [0, 1) → значение (равные доли отрезка на значение)."""
         return self.values[min(int(u * len(self.values)), len(self.values) - 1)]
+
+    def to_unit(self, value: Any) -> float:
+        """Обратное отображение: середина доли отрезка, отведённой значению."""
+        return (self.values.index(value) + 0.5) / len(self.values)
 
     def contains(self, value: Any) -> bool:
         return value in self.values
@@ -285,6 +310,25 @@ class ParameterSpace:
                 values[p.name] = p.default
         return values
 
+    def to_unit(
+        self, values: Mapping[str, Any], fallback: Sequence[float] | None = None
+    ) -> list[float]:
+        """Обратное отображение точки пространства в единичный куб (по :meth:`free_names`).
+
+        Координата неактивного параметра не определяется значением. Она
+        берётся из ``fallback`` (обычно исходная точка плана), а без него
+        равна 0,5.
+        """
+        free = self.free_names()
+        out = []
+        for j, name in enumerate(free):
+            p = self[name]
+            if p.is_active(values) and name in values:
+                out.append(float(p.domain.to_unit(values[name])))
+            else:
+                out.append(float(fallback[j]) if fallback is not None else 0.5)
+        return out
+
     def out_of_domain(self, values: Mapping[str, Any]) -> list[str]:
         """Имена активных параметров, значения которых вне домена."""
         bad = []
@@ -316,6 +360,29 @@ class ParameterSpace:
                 }
             )
         return rows
+
+
+def space_id(space: ParameterSpace) -> str:
+    """Идентификатор пространства ``spc-xxxxxxxxxxxx``: хэш доменов и условий активности.
+
+    Попадает в манифест набора сценариев: по нему видно, из какого
+    пространства параметров сформирован набор.
+    """
+    import hashlib
+    import json
+
+    rows = [
+        {
+            "name": p.name,
+            "domain": type(p.domain).__name__,
+            "spec": repr(p.domain),
+            "default": repr(p.default),
+            "active_if": repr(p.active_if),
+        }
+        for p in space
+    ]
+    text = json.dumps(rows, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return "spc-" + hashlib.sha256(text.encode("utf-8")).hexdigest()[:12]
 
 
 #: Пространство параметров по умолчанию для семейства ``hyperplane_gauss``.

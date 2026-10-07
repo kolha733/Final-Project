@@ -12,8 +12,10 @@
 сценарии с одинаковой цепочкой концептов получают один идентификатор, а
 по идентификатору можно кэшировать и связывать результаты.
 
-Наследование шаблонов (``extends``) и манифесты наборов сценариев
-реализуются на этапе 3 в модуле :mod:`scendrift.formation`.
+Наследование шаблонов (``extends``) и композиция из блоков (``blocks``)
+реализованы в :mod:`scendrift.formation`. Функция :func:`from_dict`
+вызывает их, если описание их использует (импорт ленивый: пакет
+``scenario`` не зависит от ``formation`` при загрузке).
 """
 
 from __future__ import annotations
@@ -103,23 +105,29 @@ def to_dict(spec: ScenarioSpec) -> dict[str, Any]:
     return spec.model_dump(mode="json")
 
 
-def from_dict(data: dict[str, Any]) -> ScenarioSpec:
+def from_dict(data: dict[str, Any], *, base_dir: str | Path | None = None) -> ScenarioSpec:
     """Строит сценарий из словаря в канонической или компактной форме.
 
     В компактной форме вместо ``events`` задаётся ``drifts`` —
     объект :class:`~scendrift.scenario.schema.DriftPlan`. Он разворачивается
     в явный список событий с помощью
-    :func:`~scendrift.scenario.schema.expand_plan`.
+    :func:`~scendrift.scenario.schema.expand_plan`. Описание может
+    наследовать шаблон (``extends``) и задавать события блоками (``blocks``).
+
+    Args:
+        data: описание сценария.
+        base_dir: каталог, относительно которого ищутся файлы-родители ``extends``.
 
     Raises:
-        NotImplementedError: если используется ``extends`` (этап 3).
         ValueError: если одновременно заданы ``events`` и ``drifts``.
+        TemplateError: при неизвестном шаблоне или цикле наследования.
     """
     data = dict(data)
-    if "extends" in data:
-        raise NotImplementedError(
-            "наследование шаблонов (extends) реализуется в scendrift.formation (этап 3)"
-        )
+    if "extends" in data or "blocks" in data:
+        from scendrift.formation.compose import expand_blocks
+        from scendrift.formation.templates import resolve
+
+        data = expand_blocks(resolve(data, base_dir=base_dir))
     data.setdefault("schema_version", SCHEMA_VERSION)
     if "drifts" in data:
         if "events" in data:
@@ -139,12 +147,12 @@ def dumps_yaml(spec: ScenarioSpec) -> str:
     return f"# id: {scenario_id(spec)}\n# schema_version: {spec.schema_version}\n{body}"
 
 
-def loads_yaml(text: str) -> ScenarioSpec:
+def loads_yaml(text: str, *, base_dir: str | Path | None = None) -> ScenarioSpec:
     """Читает сценарий из YAML-строки (каноническая или компактная форма)."""
     data = yaml.safe_load(text)
     if not isinstance(data, dict):
         raise ValueError("YAML-описание сценария должно быть отображением")
-    return from_dict(data)
+    return from_dict(data, base_dir=base_dir)
 
 
 def save(spec: ScenarioSpec, path: str | Path) -> Path:
@@ -167,9 +175,9 @@ def load(path: str | Path) -> ScenarioSpec:
     path = Path(path)
     text = path.read_text(encoding="utf-8")
     if path.suffix in {".yaml", ".yml"}:
-        return loads_yaml(text)
+        return loads_yaml(text, base_dir=path.parent)
     if path.suffix == ".json":
-        return from_dict(json.loads(text))
+        return from_dict(json.loads(text), base_dir=path.parent)
     raise ValueError(f"неизвестный формат файла: {path.suffix}")
 
 

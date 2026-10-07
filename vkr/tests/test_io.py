@@ -52,8 +52,8 @@ def test_canonical_form_is_stable() -> None:
 
 
 def test_compact_form_errors() -> None:
-    with pytest.raises(NotImplementedError):
-        io.from_dict({"extends": "catalog/medium"})
+    with pytest.raises(ValueError, match="нет шаблона"):
+        io.from_dict({"extends": "catalog/no_such_profile"})
     with pytest.raises(ValueError):
         io.from_dict({"events": [], "drifts": {"schedule": {"count": 1}}})
     with pytest.raises(ValueError):

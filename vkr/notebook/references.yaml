@@ -620,6 +620,18 @@
   number: 4
   pages: 784–802
   status: ok
+- key: hickernell1998
+  type: article
+  authors:
+  - Hickernell F. J.
+  title: A generalized discrepancy and quadrature error bound
+  journal: Mathematics of Computation
+  year: 1998
+  volume: 67
+  number: 221
+  pages: 299–322
+  status: check
+  lang: en
 - key: scipy2020
   type: article
   authors:
