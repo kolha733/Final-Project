@@ -13,7 +13,7 @@
 
 Правила сопоставления срабатываний с событиями и определения метрик
 (TP/FP/FN, MTD, MDR, MTFA, MTR) формализованы в разделе 2.6 ноутбука,
-реализация вынесена в модуль ``scendrift.evaluation.metrics`` (этап 4).
+реализация — модуль ``scendrift.evaluation.metrics`` (п. 4.9).
 """
 
 from __future__ import annotations

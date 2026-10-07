@@ -72,6 +72,21 @@ extends: catalog/medium                     # easy / medium / hard — точк�
 drifts: {defaults: {magnitude: 0.3}}
 ```
 
+Оценка детекторов на наборе сценариев, статистика и отчёт:
+
+```python
+from scendrift.detectors import DETECTORS, make_detector
+from scendrift.evaluation.runner import run_benchmark
+from scendrift.evaluation.results import runs_to_frame
+from scendrift.evaluation.stats import average_ranks, block_matrix, friedman
+
+detectors = [make_detector(n) for n in DETECTORS] + [make_detector("NoDrift"), make_detector("Oracle")]
+runs = run_benchmark(suite.scenarios, detectors, repeats=3, n_jobs=4, cache_dir="results/cache")
+frame = runs_to_frame(runs, suite.scenarios)          # метрики п. 2.6 + параметры сценариев
+matrix, _ = block_matrix(frame[frame.detector.isin(DETECTORS)], "f1")
+print(average_ranks(matrix), friedman(matrix))
+```
+
 ## Как править
 
 - **Код** правится в `scendrift/*.py`.
