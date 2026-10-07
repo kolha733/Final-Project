@@ -52,6 +52,7 @@ __all__ = [
     "RunCache",
     "run_scenario",
     "run_benchmark",
+    "with_protocol",
 ]
 
 #: Версия формата и семантики прогона; при изменении раннера кэш становится недействительным.
@@ -217,3 +218,14 @@ def run_benchmark(
     else:
         results = Parallel(n_jobs=n_jobs)(delayed(task)(spec, seed) for spec, seed in tasks)
     return [run for chunk in results for run in chunk]
+
+
+def with_protocol(spec: ScenarioSpec, **updates: object) -> ScenarioSpec:
+    """Копия сценария с изменённым протоколом оценки (с проверкой значений).
+
+    ``model_copy(update=...)`` в pydantic значения не проверяет; здесь
+    протокол строится заново через ``model_validate``, поэтому, например,
+    строка ``"none"`` становится значением перечисления.
+    """
+    protocol = EvaluationSpec.model_validate({**spec.evaluation.model_dump(), **updates})
+    return spec.model_copy(update={"evaluation": protocol})
