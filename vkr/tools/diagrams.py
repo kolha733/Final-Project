@@ -119,6 +119,21 @@ def _legend(ax, y=0.02):
         x += 0.17
 
 
+def _save(fig, ax, path: Path) -> None:
+    """Схема для ноутбука и копия без заголовка (``zapiska/``) для записки и презентации."""
+    path = Path(path)
+    fig.savefig(path, dpi=180, bbox_inches="tight", facecolor="white")
+    clean = path.parent / "zapiska" / path.name
+    clean.parent.mkdir(parents=True, exist_ok=True)
+    # заголовок задан с loc="left": это отдельный объект, а не ax.title
+    titles = [ax.title, ax._left_title, ax._right_title]  # noqa: SLF001
+    for title in titles:
+        title.set_visible(False)
+    fig.savefig(clean, dpi=180, bbox_inches="tight", facecolor="white")
+    for title in titles:
+        title.set_visible(True)
+
+
 def _canvas(title: str, size=(15, 9.5)):
     fig, ax = plt.subplots(figsize=size)
     ax.set_xlim(0, 1)
@@ -202,8 +217,8 @@ def component_diagram(path: Path) -> Path:
         "detectors — детекторы",
         [
             "единый интерфейс DriftDetector",
-            "ADWIN, DDM, EDDM, KSWIN,",
-            "PageHinkley, HDDM_A, HDDM_W",
+            "ADWIN, KSWIN, PageHinkley (оба / up),",
+            "DDM, EDDM, HDDM_A, HDDM_W, FHDDM",
             "базовые линии: NoDrift,",
             "Periodic, Oracle",
             "реестр + гиперпараметры",
@@ -266,7 +281,7 @@ def component_diagram(path: Path) -> Path:
     _arrow(ax, (xs[0] + w, 0.345), (xs[1], 0.345))
     _arrow(ax, (xs[1] + w, 0.345), (xs[2], 0.345))
     _legend(ax, y=0.005)
-    fig.savefig(path, dpi=180, bbox_inches="tight", facecolor="white")
+    _save(fig, ax, path)
     plt.close(fig)
     return path
 
@@ -277,9 +292,9 @@ def dataflow_diagram(path: Path) -> Path:
         "Рис. Б. Конвейер автоматического формирования и исполнения бенчмарка", size=(15, 7.5)
     )
     row1: Sequence[tuple[str, list[str], str]] = [
-        ("1. Пространство Θ", ["домены параметров,", "условия активности"], "K"),
+        ("1. Пространство Ξ", ["домены параметров,", "условия активности"], "K"),
         ("2. План эксперимента", ["grid / random /", "LHS / Sobol / шкала λ"], "K"),
-        ("3. Сборка S(θ)", ["точка θ → сценарий", "(шаблоны, композиция)"], "K"),
+        ("3. Сборка S(ξ)", ["точка ξ → сценарий", "(шаблоны, композиция)"], "K"),
         ("4. Проверка", ["ограничения C1–C14:", "отклонить / исправить"], "K"),
         ("5. Набор сценариев", ["ScenarioSpec + id,", "манифест YAML"], "K"),
     ]
@@ -332,7 +347,7 @@ def dataflow_diagram(path: Path) -> Path:
         va="center",
     )
     _legend(ax, y=-0.03)
-    fig.savefig(path, dpi=180, bbox_inches="tight", facecolor="white")
+    _save(fig, ax, path)
     plt.close(fig)
     return path
 
@@ -485,7 +500,7 @@ def class_diagram(path: Path) -> Path:
         0.28,
         0.10,
         "«protocol» ScenarioSampler",
-        ["sample(Θ, n, seed) → list[θ]"],
+        ["design(Ξ, n, seed) → U ⊂ [0, 1)ᴰ", "sample(Ξ, n, seed) → list[ξ]"],
         who="K",
     )
     _arrow(ax, (0.36, 0.88), (0.29, 0.88), "1", style="-|>")
@@ -497,7 +512,7 @@ def class_diagram(path: Path) -> Path:
     _arrow(ax, (0.29, 0.28), (0.36, 0.28), "1")
     _arrow(ax, (0.64, 0.28), (0.71, 0.28), "вход")
     _legend(ax, y=-0.045)
-    fig.savefig(path, dpi=180, bbox_inches="tight", facecolor="white")
+    _save(fig, ax, path)
     plt.close(fig)
     return path
 

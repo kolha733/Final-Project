@@ -71,7 +71,7 @@ decimal_comma(ax)
 fig.suptitle("Рис. 5.1. Э1: калибровка величины на уровне данных", x=0.01, ha="left",
              fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig(FIGURES / "fig_5_1_e1_calibration.png")
+save_figure(fig, FIGURES / "fig_5_1_e1_calibration.png")
 plt.show()
 ```
 <!-- cell -->
@@ -132,6 +132,8 @@ rand_summary = rand.groupby("вид").agg(
     max_abs_ошибка=("m", lambda s: (rand.loc[s.index, "m̂"] - s).abs().max()))
 ci = rand.groupby("вид")["z"].apply(sd_interval, level=1 - 0.05 / 3)
 rand_summary["ДИ_ст_откл"] = [f"[{lo:.2f}; {hi:.2f}]" for lo, hi in ci]
+rand_summary.assign(ДИ_нижн=[lo for lo, _ in ci], ДИ_верх=[hi for _, hi in ci]).to_csv(
+    RESULTS / "e1_random_summary.csv")
 display(rand_summary.round(3))
 ```
 <!-- cell -->
@@ -151,7 +153,7 @@ decimal_comma(ax)
 fig.suptitle("Рис. 5.2. Э1: распределение нормированных отклонений", x=0.01, ha="left",
              fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig(FIGURES / "fig_5_2_e1_zscores.png")
+save_figure(fig, FIGURES / "fig_5_2_e1_zscores.png")
 plt.show()
 print(f"Критерий Шапиро–Уилка для z: p = {shapiro(rand['z']).pvalue:.3f}")
 ```
@@ -198,8 +200,9 @@ decimal_comma(*axes.ravel())
 fig.suptitle("Рис. 5.3. Э1: форма перехода реального дрейфа (m = 0,3)", x=0.01, ha="left",
              fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig(FIGURES / "fig_5_3_e1_transitions.png")
+save_figure(fig, FIGURES / "fig_5_3_e1_transitions.png")
 plt.show()
+pd.DataFrame(curve_errors).to_csv(RESULTS / "e1_shape.csv", index=False)
 display(pd.DataFrame(curve_errors).round(4))
 ```
 <!-- cell -->

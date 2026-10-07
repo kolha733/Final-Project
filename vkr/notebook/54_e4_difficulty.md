@@ -43,7 +43,7 @@ decimal_comma(*axes.ravel())
 fig.suptitle(f"Рис. 5.7. Э4: F1 вдоль шкалы сложности ({E4['seeds']} структурных seed на точку)",
              x=0.01, ha="left", fontsize=12, fontweight="bold")
 fig.tight_layout(rect=(0, 0.04, 1, 1))
-fig.savefig("docs/figures/fig_5_7_e4_lambda.png")
+save_figure(fig, "docs/figures/fig_5_7_e4_lambda.png")
 plt.show()
 
 lam_rows = []
@@ -58,6 +58,7 @@ for name in [*RIVER, *BASELINE_NAMES]:
 lam_table = pd.DataFrame(lam_rows).set_index("детектор")
 lam_table["p (Холм)"] = np.nan
 lam_table.loc[RIVER, "p (Холм)"] = holm(lam_table.loc[RIVER, "p"].tolist())
+lam_table.to_csv("results/e4_lambda_spearman.csv")
 display(lam_table.round(4))
 ```
 <!-- cell -->
@@ -76,6 +77,7 @@ for lam in [0.0, 0.3, 0.5, 0.7, 0.9, 1.0]:
                         "recall (детекторы river)": part["recall"].mean(),
                         "случайный recall": part["случайный recall"].mean()})
 window_table = pd.DataFrame(window_rows)
+window_table.to_csv("results/e4_windows.csv", index=False)
 display(window_table.round(3))
 ```
 <!-- cell -->
@@ -126,6 +128,7 @@ ofat_summary = ofat_table.groupby("фактор").agg(
     значимо_отрицательных=("ρ", lambda s: int(((s < 0) & (ofat_table.loc[s.index, "p (Холм)"]
                                                           < 0.05)).sum())),
     детекторов=("ρ", "size")).reindex([f.name for f in DIFFICULTY.factors])
+ofat_summary.to_csv("results/e4_ofat_summary.csv")
 display(ofat_view)
 display(ofat_summary.round(3))
 ```

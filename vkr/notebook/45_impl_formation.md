@@ -48,7 +48,7 @@ decimal_comma(*axes)
 fig.suptitle("Рис. 4.1. Проекция плана из 128 точек на две из 11 осей", x=0.01, ha="left",
              fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_4_1_plans.png")
+save_figure(fig, "docs/figures/fig_4_1_plans.png")
 plt.show()
 
 plan_rows = []
@@ -59,6 +59,7 @@ for method in PLAN_NAMES:
                           **design_metrics(U_demo)})
 plan_table = (pd.DataFrame(plan_rows).groupby("план", sort=False).mean()
               .rename(columns={"cd": "CD-расхождение", "strata": "доля слоёв"}))
+plan_table.to_csv("results/formation_plans.csv")
 display(plan_table.round(4))
 ```
 <!-- cell -->
@@ -189,7 +190,7 @@ decimal_comma(ax)
 fig.suptitle("Рис. 4.2. Сценарий, составленный из блоков", x=0.01, ha="left", fontsize=12,
              fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_4_2_composition.png")
+save_figure(fig, "docs/figures/fig_4_2_composition.png")
 plt.show()
 ```
 <!-- cell -->
@@ -345,6 +346,8 @@ for col in ["КС: равномерное на F", "КС: исходный пл�
     mc_table[f"где ({col.split(': ')[1]})"] = worst.set_index("способ")["параметр"]
 print(f"N_MC = {FORM_EXP['mc']}, эталон: {len(reference)} точек, "
       f"порог шума КС ≈ {ks_noise:.3f}, время {time.perf_counter() - start:.1f} с")
+mc_table.assign(**{"порог КС": ks_noise, "N_MC": FORM_EXP["mc"]}).to_csv(
+    "results/formation_policies.csv")
 display(mc_table.round(3))
 ```
 <!-- cell -->
@@ -366,7 +369,7 @@ fig.legend(handles, labels, loc="lower center", ncol=4, fontsize=9.5, frameon=Fa
 fig.suptitle("Рис. 4.3. Как способ учёта ограничений меняет распределение параметров",
              x=0.01, ha="left", fontsize=12, fontweight="bold")
 fig.tight_layout(rect=(0, 0.07, 1, 1))
-fig.savefig("docs/figures/fig_4_3_policies.png")
+save_figure(fig, "docs/figures/fig_4_3_policies.png")
 plt.show()
 ```
 <!-- cell -->

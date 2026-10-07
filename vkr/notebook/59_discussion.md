@@ -69,6 +69,10 @@ claims_5 = [
 ]
 claims_5_table = pd.DataFrame(claims_5, columns=["утверждение", "выполнено"])
 claims_5_table.to_csv("results/chapter5_claims.csv", index=False)
+pd.DataFrame({"reset/none (Э2)": policy_agreement, "ручной/Э2 (Э6)": manual_agreement,
+              "реальные/синтетика (Э7)": e7_agreement, "F1/Δaccuracy (Э8)": acc_agreement}
+             ).T.to_csv("results/rank_agreements.csv")
+Path("results/run_mode.txt").write_text(MODE + "\n", encoding="utf-8")  # для пояснительной записки
 display(claims_5_table)
 ```
 <!-- cell -->

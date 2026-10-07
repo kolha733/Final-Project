@@ -60,7 +60,7 @@ decimal_comma(ax)
 fig.suptitle(f"Рис. 5.4. Э2: F1 детекторов на наборе {e2_suite.name} ({len(e2_specs)} сценариев)",
              x=0.01, ha="left", fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_5_4_e2_f1.png")
+save_figure(fig, "docs/figures/fig_5_4_e2_f1.png")
 plt.show()
 
 e2_by_kind = e2_scen[e2_scen["detector"].isin(RIVER)].pivot_table(
@@ -85,6 +85,8 @@ policy_cmp = pd.concat({
         ["f1", "precision", "fp_out"]].mean(),
     "none": e2_none.groupby("detector")[["f1", "precision", "fp_out"]].mean(),
 }, axis=1).reindex([n for n in detector_order if n in compare_names])
+policy_cmp.set_axis([f"{a}:{b}" for a, b in policy_cmp.columns], axis=1).to_csv(
+    "results/e2_policy.csv")
 display(policy_cmp.round(3))
 
 river_in_both = [n for n in RIVER if n in compare_names]

@@ -37,6 +37,8 @@ print("сценариев с W4:", int(pd.DataFrame(e7_index)["W4"].sum()), "и�
 e7_recall = e7[e7["detector"].isin(RIVER)].pivot_table(
     index="detector", columns=["источник", "kind"], values="recall", aggfunc="mean"
 ).reindex(order_f1)
+e7_recall.set_axis([f"{a}:{b}" for a, b in e7_recall.columns], axis=1).to_csv(
+    "results/e7_recall.csv")
 display(e7_recall.round(3))
 ```
 <!-- cell -->

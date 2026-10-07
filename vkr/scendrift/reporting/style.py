@@ -13,9 +13,10 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from pathlib import Path
 
 import matplotlib as mpl
-from matplotlib.ticker import FuncFormatter
+from matplotlib.ticker import FixedFormatter, FuncFormatter
 
 __all__ = [
     "CATEGORICAL",
@@ -28,6 +29,7 @@ __all__ = [
     "apply_style",
     "color_map",
     "decimal_comma",
+    "save_figure",
 ]
 
 #: Категориальные цвета (светлая тема), фиксированный порядок слотов.
@@ -116,7 +118,43 @@ def _comma(value: float, _pos: int | None = None) -> str:
 
 
 def decimal_comma(*axes: mpl.axes.Axes) -> None:
-    """Подписи делений осей с десятичной запятой (ГОСТ 7.32)."""
+    """Подписи делений осей с десятичной запятой (ГОСТ 7.32).
+
+    Оси с заданными текстовыми подписями (``set_yticks(ticks, labels)``) не
+    трогаются: иначе названия заменились бы номерами делений. Matplotlib
+    хранит такие подписи в ``FixedFormatter`` или в ``FuncFormatter`` со
+    своей функцией.
+    """
     for ax in axes:
-        ax.xaxis.set_major_formatter(FuncFormatter(_comma))
-        ax.yaxis.set_major_formatter(FuncFormatter(_comma))
+        for axis in (ax.xaxis, ax.yaxis):
+            current = axis.get_major_formatter()
+            custom = isinstance(current, FixedFormatter) or (
+                isinstance(current, FuncFormatter) and current.func is not _comma
+            )
+            if not custom:
+                axis.set_major_formatter(FuncFormatter(_comma))
+
+
+def save_figure(fig: mpl.figure.Figure, path: str | Path, *, clean_dir: str = "zapiska") -> Path:
+    """Сохраняет рисунок и его «чистую» копию без общего заголовка.
+
+    Общий заголовок (``fig.suptitle``) с номером рисунка нужен в ноутбуке. В
+    пояснительной записке и презентации подпись по ГОСТ 7.32 ставится под
+    рисунком и нумеруется иначе, поэтому туда идёт копия без заголовка:
+    ``<каталог>/zapiska/<имя>``.
+
+    Returns:
+        Путь к основному файлу.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path)
+    clean = path.parent / clean_dir / path.name
+    clean.parent.mkdir(parents=True, exist_ok=True)
+    title = fig._suptitle  # noqa: SLF001 — у matplotlib нет публичного доступа
+    if title is not None:
+        title.set_visible(False)
+    fig.savefig(clean)
+    if title is not None:
+        title.set_visible(True)
+    return path

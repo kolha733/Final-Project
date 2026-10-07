@@ -13,6 +13,8 @@ acc_table = e2.groupby("detector")[["delta_accuracy", "f1"]].agg(["mean", "std"]
 real_first = e2[e2["kind"] == "real"]
 acc_table[("oracle_gap (real)", "mean")] = real_first.groupby("detector")["oracle_gap"].mean()
 acc_table[("oracle_gap (real)", "std")] = real_first.groupby("detector")["oracle_gap"].std()
+acc_table.set_axis([f"{a}:{b}" for a, b in acc_table.columns], axis=1).to_csv(
+    "results/e8_accuracy.csv")
 display(format_table(acc_table))
 
 ranks_acc = e5_ranks["delta_accuracy"]
@@ -27,6 +29,7 @@ for name in RIVER:
     corr_rows.append({"детектор": name, "ρ(F1, Δacc)": rho, "p": p})
 corr_acc = pd.DataFrame(corr_rows).set_index("детектор")
 corr_acc["p (Холм)"] = holm(corr_acc["p"].tolist())
+corr_acc.to_csv("results/e8_corr.csv")
 display(corr_acc.reindex(order_f1).round(4))
 
 means = e2.groupby("detector")[["f1", "delta_accuracy"]].mean()
@@ -45,6 +48,6 @@ decimal_comma(ax)
 fig.suptitle("Рис. 5.10. Э8: качество обнаружения и влияние на accuracy", x=0.01, ha="left",
              fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_5_10_e8_accuracy.png")
+save_figure(fig, "docs/figures/fig_5_10_e8_accuracy.png")
 plt.show()
 ```

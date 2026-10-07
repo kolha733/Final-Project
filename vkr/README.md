@@ -19,7 +19,8 @@
 | `configs/schema/scenario.schema.json` | JSON Schema сценария (генерируется из pydantic) |
 | `tests/` | тесты pytest |
 | `tools/` | сборка ноутбука, схемы архитектуры, оформление литературы по ГОСТ |
-| `docs/figures/` | рисунки для ноутбука, записки и презентации |
+| `docs/figures/` | рисунки для ноутбука, записки и презентации (`docs/figures/zapiska/` — копии без общего заголовка) |
+| `docs/zapiska/` | пояснительная записка: текст (`text/*.md`), числа из результатов (`facts.py`), параметры оформления по ГОСТ 7.32 (`format_config.py`), сборщик (`build_docx.py`) и готовые `.docx` и `.pdf` |
 | `PLAN.md`, `CONTRIBUTORS.md` | план работ и распределение вклада |
 
 ## Быстрый старт
@@ -30,6 +31,7 @@ python -m pip install -r requirements.txt
 python -m pytest                              # тесты
 python tools/build_notebook.py --execute      # собрать и выполнить ноутбук
 python tools/build_notebook.py --check        # сверить код в ноутбуке с модулями
+python docs/zapiska/build_docx.py             # собрать пояснительную записку (.docx и .pdf; нужен LibreOffice)
 ```
 
 Пример: загрузить сценарий, проверить его и вывести фактическую величину дрейфа.

@@ -39,6 +39,7 @@ ranks_auto = e5_ranks["f1"]
 f1_side["ранг (ручной)"] = ranks_manual
 f1_side["ранг (Э2)"] = ranks_auto
 manual_agreement = rank_agreement(ranks_manual, ranks_auto)
+f1_side.to_csv("results/e6_f1.csv")
 display(f1_side.round(3))
 print(f"согласие ранжирований по F1: τ = {manual_agreement['tau']:.2f} "
       f"(p = {manual_agreement['p']:.3g}), ρ = {manual_agreement['rho']:.2f}")
@@ -65,6 +66,7 @@ coverage = pd.DataFrame({
     "видов дрейфа": [len({e.kind for s in manual_specs for e in s.events if e.kind}),
                      len({e.kind for s in e2_specs for e in s.events if e.kind})],
 }, index=["ручной набор", f"набор Э2 ({e2_suite.name})"])
+coverage.to_csv("results/e6_coverage.csv")
 display(coverage.round(3))
 
 fig, (ax_h, ax_r) = plt.subplots(1, 2, figsize=(12, 4.4))
@@ -89,6 +91,6 @@ decimal_comma(ax_h, ax_r)
 fig.suptitle("Рис. 5.9. Э6: ручной набор классических потоков и автоматический набор",
              x=0.01, ha="left", fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_5_9_e6_manual.png")
+save_figure(fig, "docs/figures/fig_5_9_e6_manual.png")
 plt.show()
 ```

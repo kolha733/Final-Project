@@ -28,10 +28,11 @@ for ax, (metric, better_high, label) in zip(axes, E5_METRICS):
 fig.suptitle("Рис. 5.8. Э5: CD-диаграммы (Неменьи, α = 0,05) на наборе Э2", x=0.01, ha="left",
              fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_5_8_e5_cd.png")
+save_figure(fig, "docs/figures/fig_5_8_e5_cd.png")
 plt.show()
 e5_table = pd.DataFrame(e5_rows)
 e5_table.to_csv("results/e5_friedman.csv", index=False)
+pd.DataFrame(e5_ranks).to_csv("results/e5_ranks.csv")
 display(e5_table.round(4))
 ```
 <!-- cell -->

@@ -261,7 +261,8 @@ check.round(5)
 ```python
 import matplotlib.pyplot as plt
 
-from scendrift.reporting.style import CATEGORICAL, TEXT_SECONDARY, apply_style, decimal_comma
+from scendrift.reporting.style import (CATEGORICAL, TEXT_SECONDARY, apply_style, decimal_comma,
+                                       save_figure)
 
 apply_style()
 fig, axes = plt.subplots(1, 2, figsize=(12, 4.2))
@@ -286,7 +287,7 @@ decimal_comma(*axes)
 fig.suptitle("Рис. 2.1. Семантика величины реального дрейфа (π = π₀)", x=0.01, ha="left",
              fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_2_1_severity.png")
+save_figure(fig, "docs/figures/fig_2_1_severity.png")
 plt.show()
 ```
 <!-- cell -->

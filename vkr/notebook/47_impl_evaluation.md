@@ -53,6 +53,7 @@ direction = pd.DataFrame(
      for name in DETECTORS]
     + [direction_row("FHDDM, вход e (как в описании river)", "—",
                      lambda: RiverDetector(fhddm_raw), 40)])
+direction.to_csv("results/detector_direction.csv", index=False)
 display(direction)
 ```
 <!-- cell -->
@@ -144,7 +145,7 @@ decimal_comma(ax_err)
 fig.suptitle("Рис. 4.4. Срабатывания детекторов на одной реализации профиля medium",
              x=0.01, ha="left", fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_4_4_detections.png")
+save_figure(fig, "docs/figures/fig_4_4_detections.png")
 plt.show()
 ```
 <!-- cell -->
@@ -167,6 +168,8 @@ policy_frame["политика"] = policy_frame["scenario_id"].map(
     {sio.scenario_id(s): s.evaluation.on_detection.value for s in policy_specs})
 policy_table = policy_frame.pivot_table(index="detector", columns="политика",
                                         values=["fp_out", "precision", "recall"], aggfunc="mean")
+policy_frame.groupby(["detector", "политика"])[["fp_out", "precision", "recall"]].mean().to_csv(
+    "results/protocol_policy.csv")
 display(policy_table.round(2))
 ```
 <!-- cell -->
@@ -284,7 +287,7 @@ cd_diagram(pilot_ranks, pilot_cd, ax=ax)
 fig.suptitle(f"Рис. 4.5. CD-диаграмма по F1 (пилотный прогон, N = {f1_matrix.shape[0]})",
              x=0.01, ha="left", fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_4_5_cd_pilot.png")
+save_figure(fig, "docs/figures/fig_4_5_cd_pilot.png")
 plt.show()
 pilot_wilcoxon = wilcoxon_holm(f1_matrix)
 print("пар с различием после поправки Холма:",

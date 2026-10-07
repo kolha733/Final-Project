@@ -49,7 +49,7 @@ for ax in axes[:, 0]:
 fig.suptitle(f"Рис. 5.5. Э3: F1 на сетке «величина × ширина» (реальный дрейф, K = 3, "
              f"{E3['repeats']} повтора)", x=0.01, ha="left", fontsize=12, fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_5_5_e3_grid.png")
+save_figure(fig, "docs/figures/fig_5_5_e3_grid.png")
 plt.show()
 
 grid_trend = []
@@ -61,6 +61,7 @@ for name in RIVER:
                        "F1 при m = 0,03": g.loc[g["magnitude"] == 0.03, "f1"].mean(),
                        "F1 при m = 0,4": g.loc[g["magnitude"] == 0.4, "f1"].mean()})
 grid_trend = pd.DataFrame(grid_trend).set_index("детектор")
+grid_trend.to_csv("results/e3_grid_trend.csv")
 display(grid_trend.round(3))
 ```
 <!-- cell -->
@@ -92,7 +93,7 @@ fig.suptitle(f"Рис. 5.6. Э3: ρ Спирмена между F1 и парам
              f"{e2_suite.name}, N = {len(e2_specs)})", x=0.01, ha="left", fontsize=12,
              fontweight="bold")
 fig.tight_layout()
-fig.savefig("docs/figures/fig_5_6_e3_spearman.png")
+save_figure(fig, "docs/figures/fig_5_6_e3_spearman.png")
 plt.show()
 print("значимых пар (детектор, параметр):", int(sig_mat.to_numpy().sum()), "из", sig_mat.size)
 display(e2_rho[e2_rho["p (Холм)"] < 0.05].round(4))
@@ -111,6 +112,7 @@ for name in eta_detectors:
                                          for col in ["f1", "far", "случайный recall",
                                                      "превышение recall"]}})
 eta_mechanism = pd.DataFrame(eta_rows).set_index("детектор")
+eta_mechanism.to_csv("results/e3_eta_mechanism.csv")
 display(eta_mechanism.round(3))
 ```
 <!-- cell -->
