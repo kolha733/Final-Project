@@ -1,0 +1,16 @@
+# Пример 4. Инкрементальные дрейфы со случайным расписанием (позиции задаёт concept_seed).
+# Затронута только часть признаков, поэтому m ограничена сверху (ограничение C10).
+schema_version: "1.0"
+name: incremental_random_partial
+tags: [example, incremental, partial]
+stream:
+  n_samples: 40000
+  n_features: 15
+  minority_share: 0.5
+  concept_seed: 5
+drifts:
+  schedule: {mode: random, count: 4, min_gap: 500}
+  defaults: {form: incremental, kind: real, width: 3000, magnitude: 0.1, affected_share: 0.3}
+  overrides:
+    - {index: 3, shape: sigmoid}
+seed: 3

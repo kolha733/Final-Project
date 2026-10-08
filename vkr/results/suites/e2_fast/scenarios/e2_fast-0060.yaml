@@ -1,0 +1,24 @@
+# id: scn-3b57abc58338
+# schema_version: 1.0
+schema_version: '1.0'
+name: e2_fast-0060
+description: 'Базовый шаблон каталога: hyperplane_gauss, три реальных дрейфа'
+tags: []
+stream:
+  family: hyperplane_gauss
+  n_samples: 38967
+  n_features: 32
+  minority_share: 0.30176368043757973
+  label_noise: 0.01835399279370904
+  concept_seed: 1045477939
+  family_params: {}
+events:
+- {position: 9491, width: 0, form: sudden, kind: real, magnitude: 0.372134355455637,
+  affected_share: 0.739760472625494, returns_to: null, shape: linear}
+- {position: 28475, width: 0, form: sudden, kind: real, magnitude: 0.372134355455637,
+  affected_share: 0.739760472625494, returns_to: null, shape: linear}
+evaluation: {base_model: gaussian_nb, on_detection: reset, warmup: 1000, acceptance_window: 2000,
+  delay_reference: onset}
+seed: 1045477939
+meta:
+  formation: {index: 60, policy: adapt}

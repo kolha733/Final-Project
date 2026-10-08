@@ -1,0 +1,21 @@
+# Пример 1. Один внезапный реальный дрейф: каноническая (явная) форма сценария.
+# Нормаль гиперплоскости поворачивается так, что метка меняется на 25 % пространства признаков.
+schema_version: "1.0"
+name: sudden_real_single
+description: Один внезапный реальный дрейф средней величины в середине потока
+tags: [example, sudden, real]
+stream:
+  family: hyperplane_gauss
+  n_samples: 20000
+  n_features: 10
+  minority_share: 0.5
+  label_noise: 0.0
+  concept_seed: 0
+events:
+  - {position: 10000, form: sudden, kind: real, magnitude: 0.25, affected_share: 1.0}
+evaluation:
+  base_model: gaussian_nb
+  on_detection: reset
+  warmup: 1000
+  acceptance_window: 2000
+seed: 1

@@ -1,0 +1,9 @@
+# Набор сценариев основного бенчмарка Э2, режим FULL (сервер или Colab Pro).
+# Первые 64 сценария совпадают с набором e2_fast: план Соболя расширяем.
+name: e2_full
+version: 1.0.0
+description: Основной бенчмарк Э2 (FULL) — план Соболя по 11 параметрам пространства по умолчанию
+template:
+  extends: catalog/base
+design: {method: sobol, n: 256, seed: 2027}
+constraints: adapt
