@@ -1,0 +1,12 @@
+{
+  "name": "vkr-scendrift-presentation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Презентация к защите ВКР: сборка .pptx из результатов экспериментов",
+  "scripts": {
+    "build": "node build_pptx.js"
+  },
+  "dependencies": {
+    "pptxgenjs": "4.0.1"
+  }
+}

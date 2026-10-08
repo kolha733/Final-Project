@@ -5,3 +5,4 @@ __pycache__/
 .ipynb_checkpoints/
 results/cache/
 docs/zapiska/build/
+docs/presentation/node_modules/

@@ -21,6 +21,7 @@
 | `tools/` | сборка ноутбука, схемы архитектуры, оформление литературы по ГОСТ |
 | `docs/figures/` | рисунки для ноутбука, записки и презентации (`docs/figures/zapiska/` — копии без общего заголовка) |
 | `docs/zapiska/` | пояснительная записка: текст (`text/*.md`), числа из результатов (`facts.py`), параметры оформления по ГОСТ 7.32 (`format_config.py`), сборщик (`build_docx.py`) и готовые `.docx` и `.pdf` |
+| `docs/presentation/` | презентация к защите: сборщик `build_pptx.js` (pptxgenjs), данные из результатов `slide_data.py`, готовый `.pptx` с заметками докладчиков |
 | `PLAN.md`, `CONTRIBUTORS.md` | план работ и распределение вклада |
 
 ## Быстрый старт
@@ -32,6 +33,7 @@ python -m pytest                              # тесты
 python tools/build_notebook.py --execute      # собрать и выполнить ноутбук
 python tools/build_notebook.py --check        # сверить код в ноутбуке с модулями
 python docs/zapiska/build_docx.py             # собрать пояснительную записку (.docx и .pdf; нужен LibreOffice)
+(cd docs/presentation && npm ci) && node docs/presentation/build_pptx.js   # собрать презентацию (.pptx)
 ```
 
 Пример: загрузить сценарий, проверить его и вывести фактическую величину дрейфа.
